@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.UserMapper">
+
+    <resultMap id="pageUser" type="com.example.springboot.entity.User">
+        <result column="id" property="id"></result>
+        <result column="username" property="username"></result>
+        <result column="nickname" property="nickname"></result>
+        <result column="email" property="email"></result>
+        <result column="phone" property="phone"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="avatar_url" property="avatarUrl"></result>
+        <result column="roles" property="roles"></result>
+        <collection property="albums" javaType="java.util.ArrayList" ofType="com.example.springboot.entity.Album">
+            <result column="name" property="name" />
+
+        </collection>
+    </resultMap>
+    <select id="findPage" resultMap="pageUser">
+        select user.*,album.* from User
+        left join album
+        on user.id = album.user_id
+        <where>
+            <if test="username!=null and username != ''">
+                and user.username like concat('%',#{username},'')
+            </if>
+            <if test="nickname!=null and nickname != ''">
+                and user.nickname like concat('%',#{nickname},'')
+            </if>
+            <if test="email!=null and email != ''">
+                and user.email like concat('%',#{email},'')
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

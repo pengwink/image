@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.AlbumMapper">
+
+    <select id="findPage" resultType="com.example.springboot.entity.Album">
+        select album.*,user.nickname as username from album
+        left join user
+        on album.user_id = user.id
+        <where>
+                <if test="name != null and name != '' ">
+                    and name like concat('%',#{name},'%')
+                </if>
+        </where>
+    </select>
+</mapper>
