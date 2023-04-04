@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.net.URLEncoder;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.common.Constants;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -47,7 +48,21 @@ public class PhotoController {
             //photo.setTime(DateUtil.now());
             //photo.setUser(TokenUtils.getCurrentUser().getUsername());
         }
-        photoService.saveOrUpdate(photo);
+        try{
+            photoService.getUserId(photo);
+            if (photo.getAlbumName()!=null&&photo.getAlbumName()!=""){
+                photoService.getAlbumId(photo);
+            }
+            if (photo.getTypeName()!=null && photo.getTypeName()!=""){
+                photoService.getTypeId(photo);
+            }
+
+            photoService.saveOrUpdate(photo);
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return Result.error(Constants.CODE_600, e.getMessage());
+        }
         return Result.success();
     }
 
@@ -77,16 +92,16 @@ public class PhotoController {
     public Result findPage(@RequestParam(defaultValue = "") String name,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
-        QueryWrapper<Photo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        if (!"".equals(name)) {
-            queryWrapper.like("name", name);
-        }
+//        QueryWrapper<Photo> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.orderByDesc("id");
+//        if (!"".equals(name)) {
+//            queryWrapper.like("name", name);
+//        }
 //        User currentUser = TokenUtils.getCurrentUser();
 //        if (currentUser.getRole().equals("ROLE_USER")) {
 //            queryWrapper.eq("user", currentUser.getUsername());
 //        }
-        return Result.success(photoService.page(new Page<>(pageNum, pageSize), queryWrapper));
+        return Result.success(photoService.findpage(new Page<>(pageNum, pageSize), name));
     }
 
     /**

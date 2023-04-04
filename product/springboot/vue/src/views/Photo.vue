@@ -30,16 +30,36 @@
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
-      <el-table-column prop="albumId" label="相册编号 外键"></el-table-column>
-      <el-table-column prop="userId" label="所属用户id 外键"></el-table-column>
-      <el-table-column prop="typeId" label="类型id"></el-table-column>
+      <el-table-column prop="albumName" label="相册名称"></el-table-column>
+      <el-table-column prop="userNickname" label="所属用户id 外键"></el-table-column>
+      <el-table-column prop="typeName" label="类型id"></el-table-column>
       <el-table-column prop="name" label="图片名称"></el-table-column>
-      <el-table-column label="图片"><template slot-scope="scope"><el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image></template></el-table-column>
+      <el-table-column label="图片">
+        <template slot-scope="scope">
+          <el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]">
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="content" label="图片详情"></el-table-column>
       <el-table-column prop="photoTime" label="图片创建时间"></el-table-column>
-      <el-table-column prop="photoRight" label="图片权限 1可访问、0不可访问"></el-table-column>
-      <el-table-column prop="photoStatue" label="图片状态 1有效、0禁用"></el-table-column>
-      <el-table-column prop="isAuto" label="是否符合分类规范"></el-table-column>
+      <el-table-column prop="photoRight" label="图片权限 1可访问、0不可访问">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.photoRight === 1">可访问</el-tag>
+          <el-tag  type="warning" v-if="scope.row.photoRight === 0">不可访问</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="photoStatue" label="图片状态">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.photoStatue === 1">启用</el-tag>
+          <el-tag  type="warning" v-if="scope.row.photoStatue === 0">禁用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="isStandard" label="是否符合分类规范">
+        <template slot-scope="scope">
+          <el-tag type="primary" v-if="scope.row.isStandard === 1">符合</el-tag>
+          <el-tag  type="warning" v-if="scope.row.isStandard === 0">不符合</el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作"  width="180" align="center">
         <template slot-scope="scope">
@@ -72,20 +92,20 @@
 
     <el-dialog title="信息" :visible.sync="dialogFormVisible" width="40%" :close-on-click-modal="false">
       <el-form label-width="120px" size="small" style="width: 80%; margin: 0 auto">
-        <el-form-item label="相册编号 外键">
-          <el-input v-model="form.albumId" autocomplete="off"></el-input>
+        <el-form-item label="相册名称">
+          <el-input v-model="form.albumName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="所属用户id 外键">
-          <el-input v-model="form.userId" autocomplete="off"></el-input>
+        <el-form-item label="所属用户">
+          <el-input v-model="form.userNickname" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="类型id">
-          <el-input v-model="form.typeId" autocomplete="off"></el-input>
+        <el-form-item label="类型">
+          <el-input v-model="form.typeName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="图片名称">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="图片">
-          <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgUploadSuccess">
+          <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgSuccess">
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
@@ -95,14 +115,14 @@
         <el-form-item label="图片创建时间">
           <el-date-picker v-model="form.photoTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
-        <el-form-item label="图片权限 1可访问、0不可访问">
+        <el-form-item label="图片权限">
           <el-input v-model="form.photoRight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="图片状态 1有效、0禁用">
+        <el-form-item label="图片状态">
           <el-input v-model="form.photoStatue" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="是否符合分类规范">
-          <el-input v-model="form.isAuto" autocomplete="off"></el-input>
+          <el-input v-model="form.isStandard" autocomplete="off"></el-input>
         </el-form-item>
 
       </el-form>
@@ -152,10 +172,20 @@ export default {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
           this.load()
-        } else {
+        } else if(res.code === '600') {
+          this.$message.error("无法找到该用户")
+        }else if(res.code === '700') {
+          this.$message.error("无法找到该相册")
+        }else if(res.code === '800') {
+          this.$message.error("无法找到该类型")
+        }
+        else {
           this.$message.error("保存失败")
         }
       })
+    },
+    handleImgSuccess(res){
+      this.form.img = res
     },
     handleAdd() {
       this.dialogFormVisible = true

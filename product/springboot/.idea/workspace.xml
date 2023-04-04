@@ -4,8 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c11023d-0003-48bc-adb9-05011b7c1249" name="Changes" comment="">
+    <list default="true" id="0c11023d-0003-48bc-adb9-05011b7c1249" name="Changes" comment="第一次提交">
       <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/common/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/common/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/common/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/common/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/PhotoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/PhotoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Photo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Photo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/PhotoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/PhotoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IPhotoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IPhotoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/PhotoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/PhotoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/PhotoMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/PhotoMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/PhotoMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/PhotoMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/components/Aside.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/components/Aside.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Album.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Album.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Photo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Photo.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +159,17 @@
       <workItem from="1680284543302" duration="33927000" />
       <workItem from="1680398932993" duration="1412000" />
       <workItem from="1680405176534" duration="462000" />
+      <workItem from="1680405782458" duration="24457000" />
+      <workItem from="1680483327518" duration="24722000" />
     </task>
+    <task id="LOCAL-00001" summary="第一次提交">
+      <created>1680405942495</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1680405942495</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,11 +180,48 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="第一次提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="第一次提交" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/springboot/utils/TokenUtils.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/springboot/utils/TokenUtils.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/springboot/utils/TokenUtils.java</url>
+          <line>51</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

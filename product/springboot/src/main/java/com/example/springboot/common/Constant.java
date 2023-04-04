@@ -1,5 +1,6 @@
 package com.example.springboot.common;
 
+import com.example.springboot.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

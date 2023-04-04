@@ -19,18 +19,24 @@
       <i class="el-icon-s-custom"></i>
       <span slot="title">用户管理</span>
     </el-menu-item>
-    <el-menu-item index="/album">
-      <i class="el-icon-folder-opened"></i>
-      <span slot="title">相册管理</span>
-    </el-menu-item>
-    <el-menu-item index="/type">
-      <i class="el-icon-folder-opened"></i>
-      <span slot="title">类型管理</span>
-    </el-menu-item>
-    <el-menu-item index="/photo">
-      <i class="el-icon-folder-opened"></i>
-      <span slot="title">图片管理</span>
-    </el-menu-item>
+    <el-submenu index="2">
+        <template slot="title">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">服务管理</span>
+        </template>
+      <el-menu-item index="/album">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">相册管理</span>
+      </el-menu-item>
+      <el-menu-item index="/type">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">类型管理</span>
+      </el-menu-item>
+      <el-menu-item index="/photo">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">图片管理</span>
+      </el-menu-item>
+    </el-submenu>
     <el-submenu index="2">
       <template slot="title">
         <i class="el-icon-menu"></i>

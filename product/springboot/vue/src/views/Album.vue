@@ -41,8 +41,8 @@
       </el-table-column>
       <el-table-column prop="righte" label="相册权限">
         <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.righte === 1">启用</el-tag>
-          <el-tag  type="warning" v-if="scope.row.righte === 0">禁用</el-tag>
+          <el-tag type="primary" v-if="scope.row.righte === 1">公开</el-tag>
+          <el-tag  type="warning" v-if="scope.row.righte === 0">私密</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="creatTime" label="相册创建时间"></el-table-column>
@@ -149,7 +149,6 @@ export default {
         if (res.code === '200') {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
-          console.log(res)
           this.load()
         }else if(res.code === '600') {
           this.$message.error("无法找到该用户")

@@ -1,5 +1,6 @@
 package com.example.springboot.mapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.entity.Photo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface PhotoMapper extends BaseMapper<Photo> {
 
+    Page<Photo> findPage(Page<Photo> page, String name);
 }

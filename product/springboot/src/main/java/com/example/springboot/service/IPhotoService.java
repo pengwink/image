@@ -1,5 +1,6 @@
 package com.example.springboot.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.entity.Photo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPhotoService extends IService<Photo> {
 
+    Page<Photo> findpage(Page<Photo> objectPage, String name);
+
+    public Photo getUserId(Photo photo);
+
+    public Photo getAlbumId(Photo photo);
+
+    public Photo getTypeId(Photo photo);
 }
