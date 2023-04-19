@@ -1,7 +1,10 @@
 package com.example.springboot.service;
 
+import com.example.springboot.entity.Photo;
 import com.example.springboot.entity.Type;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITypeService extends IService<Type> {
 
+    Type matche(String name);
+
+    Type matcheType(String name);
+
+    List<Type> findImage(Integer userId);
+
+    List<Photo> findPhoto(Integer id,Integer userId);
+
+    List<Type> typeAllPhoto();
 }

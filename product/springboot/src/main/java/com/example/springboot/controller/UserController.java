@@ -11,17 +11,21 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.config.interceptor.AuthAccess;
 import com.example.springboot.controller.dto.UserDTO;
 import com.example.springboot.controller.dto.UserPasswordDTO;
+import com.example.springboot.entity.Operation;
 import com.example.springboot.entity.User;
 import com.example.springboot.exception.ServiceException;
 import com.example.springboot.service.IUserService;
 import com.example.springboot.common.Constants;
 import com.example.springboot.common.Result;
+import com.example.springboot.service.RecordService;
+import com.example.springboot.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -44,7 +48,8 @@ public class UserController {
 
     @Resource
     private IUserService userService;
-
+    @Resource
+    private RecordService recordService;
     @PostMapping("/login")
     public Result login(@RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
@@ -60,6 +65,9 @@ public class UserController {
     public Result register(@RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
+        String phone = userDTO.getPhone();
+        String email = userDTO.getEmail();
+        System.out.println(userDTO);
         if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
             return Result.error(Constants.CODE_400, "参数错误");
         }
@@ -69,7 +77,7 @@ public class UserController {
 
      // 新增或者更新
     @PostMapping
-    public Result save(@RequestBody User user) {
+    public Result save(HttpServletRequest req, @RequestBody User user) {
         String username = user.getUsername();
         if (StrUtil.isBlank(username)) {
             return Result.error(Constants.CODE_400, "参数错误");
@@ -84,6 +92,7 @@ public class UserController {
                 user.setPassword("123");
             }
         }
+        recordService.addRecord(req, Operation.addOrUpdateUser.getName()+"\""+user.getUsername()+"\"", 1,getUser().getId());
         return Result.success(userService.saveOrUpdate(user));
     }
     /**
@@ -93,8 +102,9 @@ public class UserController {
      * @return
      */
     @PostMapping("/password")
-    public Result password(@RequestBody UserPasswordDTO userPasswordDTO) {
+    public Result password(HttpServletRequest req,@RequestBody UserPasswordDTO userPasswordDTO) {
         userService.updatePassword(userPasswordDTO);
+        recordService.addRecord(req, Operation.updatePassword.getName(), 1,getUser().getId());
         return Result.success();
     }
 
@@ -117,13 +127,17 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public Result delete(@PathVariable Integer id) {
-        return Result.success(userService.removeById(id));
+    public Result delete(HttpServletRequest req,@PathVariable Integer id) {
+        userService.removeById(id);
+        recordService.addRecord(req, Operation.deleteUser.getName(), 1,getUser().getId());
+        return Result.success();
     }
 
     @PostMapping("/del/batch")
-    public Result deleteBatch(@RequestBody List<Integer> ids) {
-        return Result.success(userService.removeByIds(ids));
+    public Result deleteBatch(HttpServletRequest req,@RequestBody List<Integer> ids) {
+        userService.removeByIds(ids);
+        recordService.addRecord(req, Operation.deletebatchUser.getName(), 1,getUser().getId());
+        return Result.success();
     }
 
     @GetMapping
@@ -167,7 +181,7 @@ public class UserController {
      * 导出接口
      */
     @GetMapping("/export")
-    public void export(HttpServletResponse response) throws Exception {
+    public void export(HttpServletResponse response,HttpServletRequest req) throws Exception {
         // 从数据库查询出所有的数据
         List<User> list = userService.list();
         // 通过工具类创建writer 写出到磁盘路径
@@ -195,6 +209,7 @@ public class UserController {
         writer.flush(out, true);
         out.close();
         writer.close();
+        recordService.addRecord(req, Operation.exportUser.getName(), 1,getUser().getId());
 
     }
 
@@ -205,7 +220,7 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping("/import")
-    public Result imp(MultipartFile file) throws Exception {
+    public Result imp(MultipartFile file,HttpServletRequest req) throws Exception {
         InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
         // 方式1：(推荐) 通过 javabean的方式读取Excel内的对象，但是要求表头必须是英文，跟javabean的属性要对应起来
@@ -226,7 +241,11 @@ public class UserController {
         }
 
         userService.saveBatch(users);
+        recordService.addRecord(req, Operation.exportUser.getName(), 1,getUser().getId());
         return Result.success(true);
+    }
+    private User getUser() {
+        return TokenUtils.getCurrentUser();
     }
 
 }

@@ -29,9 +29,9 @@ public class CodeGenerator {
     private static final String basePath = "D:\\resource\\projects\\BS\\CXK\\product\\springboot\\";
 
     // 数据库需要生成代码的表名
-    private static final String tableName = "photo";
+    private static final String tableName = "posts";
     // 生成页面的菜单名称
-    private static final String modelName = "类型";
+    private static final String modelName = "发布";
 
     // ----------------------------------------以上必修修改-----------------------------------------
 
@@ -45,7 +45,7 @@ public class CodeGenerator {
         // 生成vue
         createVue(tableName);
         // 生成菜单
-        createMenu(tableName, modelName);
+//        createMenu(tableName, modelName);
     }
 
     private static final String url = "jdbc:mysql://localhost:3306/" + DATASOURCE;
@@ -141,18 +141,18 @@ public class CodeGenerator {
 
     }
 
-    private static void createMenu(String tableName, String modelName) throws Exception {
-        String lowerEntityName = StrUtil.toCamelCase(tableName.replace("sys_", "").replace("t_", ""));
-        String upperEntityName = StrUtil.upperFirst(lowerEntityName);
-        DataSource ds = getDatasource();
-        //生成菜单
-        String delSql = "DELETE from sys_menu where name = ?";
-        Db.use(ds).execute(delSql, modelName);
-        String createSql = StrUtil.format("INSERT INTO `sys_menu` (`name`, `path`, `icon`, `page_path`, `sort_num`) VALUES ('{}', '{}', '{}', '{}', {})",
-                modelName, "/" + lowerEntityName, "el-icon-menu", upperEntityName, 999);
-        Db.use(ds).execute(createSql);
-        System.out.println(lowerEntityName + "菜单生成成功！");
-    }
+//    private static void createMenu(String tableName, String modelName) throws Exception {
+//        String lowerEntityName = StrUtil.toCamelCase(tableName.replace("sys_", "").replace("t_", ""));
+//        String upperEntityName = StrUtil.upperFirst(lowerEntityName);
+//        DataSource ds = getDatasource();
+//        //生成菜单
+//        String delSql = "DELETE from sys_menu where name = ?";
+//        Db.use(ds).execute(delSql, modelName);
+//        String createSql = StrUtil.format("INSERT INTO `sys_menu` (`name`, `path`, `icon`, `page_path`, `sort_num`) VALUES ('{}', '{}', '{}', '{}', {})",
+//                modelName, "/" + lowerEntityName, "el-icon-menu", upperEntityName, 999);
+//        Db.use(ds).execute(createSql);
+//        System.out.println(lowerEntityName + "菜单生成成功！");
+//    }
 
     /**
      * 获取数据库表字段

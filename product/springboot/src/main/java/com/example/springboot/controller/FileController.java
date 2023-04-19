@@ -9,13 +9,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Constant;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Files;
+import com.example.springboot.entity.Operation;
 import com.example.springboot.entity.User;
 import com.example.springboot.mapper.FileMapper;
+import com.example.springboot.service.RecordService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +42,8 @@ public class FileController {
 
     @Resource
     private FileMapper fileMapper;
-
+    @Resource
+    private RecordService recordService;
     /**
      * 文件上传接口
      * @param file 前端传递过来的文件
@@ -47,7 +51,7 @@ public class FileController {
      * @throws IOException
      */
     @PostMapping("/upload")
-    public String upload(@RequestParam MultipartFile file) throws IOException {
+    public String upload(HttpServletRequest req,@RequestParam MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(originalFilename);
         long size = file.getSize();
@@ -84,7 +88,6 @@ public class FileController {
         saveFile.setUrl(url);
         saveFile.setMd5(md5);
         fileMapper.insert(saveFile);
-
         return url;
     }
 

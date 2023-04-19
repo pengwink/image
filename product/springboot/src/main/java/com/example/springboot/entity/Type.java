@@ -1,6 +1,11 @@
 package com.example.springboot.entity;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -21,7 +26,8 @@ public class Type implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("类型id 主键")
+    @ApiModelProperty("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty("分类名称")
@@ -35,6 +41,10 @@ public class Type implements Serializable {
 
     @ApiModelProperty("排序")
     private String orderby;
+    @TableField(exist = false)
+    private boolean flag=false;
 
+    @TableField(exist = false)
+    private Integer value;
 
 }

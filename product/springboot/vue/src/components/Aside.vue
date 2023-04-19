@@ -9,7 +9,7 @@
   >
     <div style="height: 60px; line-height: 60px; text-align: center">
       <img src="../assets/logo.png" alt="" style="width: 20px; position: relative; top: 5px;">
-      <b style="color: white; margin-left: 5px" v-show="logoTextShow">后台管理系统</b>
+      <b style="color: white; margin-left: 5px" v-show="logoTextShow">图片后台管理系统</b>
     </div>
     <el-menu-item index="/home">
       <i class="el-icon-house"></i>
@@ -36,6 +36,18 @@
         <i class="el-icon-folder-opened"></i>
         <span slot="title">图片管理</span>
       </el-menu-item>
+      <el-menu-item index="/Posts">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">发布审核</span>
+      </el-menu-item>
+<!--      <el-menu-item index="/upload">-->
+<!--        <i class="el-icon-folder-opened"></i>-->
+<!--        <span slot="title">上传管理</span>-->
+<!--      </el-menu-item>-->
+      <el-menu-item index="/album1">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">查看相册</span>
+      </el-menu-item>
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">
@@ -46,7 +58,14 @@
         <i class="el-icon-folder"></i>
         <span slot="title">文件管理</span>
       </el-menu-item>
-
+      <el-menu-item index="/VisualdataType">
+        <i class="el-icon-folder"></i>
+        <span slot="title">数据可视</span>
+      </el-menu-item>
+      <el-menu-item index="/record">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">操作记录</span>
+      </el-menu-item>
     </el-submenu>
 
 <!--    <div v-for="item in menus" :key="item.id">-->

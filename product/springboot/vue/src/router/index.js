@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store";
+import front from './front'
+
 
 Vue.use(VueRouter)
 
@@ -16,7 +18,15 @@ const routes=[
       {path: 'type',name: '类型管理',component:()=>import('../views/Type.vue')},
       {path: 'photo',name: '图片管理',component:()=>import('../views/Photo.vue')},
       {path: 'person',name: '个人信息',component:()=>import('../views/Person.vue')},
+      {path: 'password',name: '修改密码',component:()=>import('../views/Password.vue')},
       {path: 'file',name: '文件管理',component:()=>import('../views/File.vue')},
+      {path: 'upload',name: '上传管理',component:()=>import('../views/upload.vue')},
+      {path: 'album1',name: '查看相册',component:()=>import('../views/Album1.vue')},
+      {path: 'InsideAlbum',name: '查看',component:()=>import('../components/InsideAlbum.vue')},
+      {path: 'record',name: '操作记录',component:()=>import('../views/Record.vue')},
+      {path: 'VisualdataType',name: '数据可视化',component:()=>import('../views/VisualdataType.vue')},
+      {path: 'Posts',name: '发布审核',component:()=>import('../views/Posts.vue')},
+
     ],
   },
   {
@@ -34,14 +44,7 @@ const routes=[
     name: 'Register',
     component: () => import('../views/Register.vue')
   },
-  {
-    path: '/front',
-    name: 'Home',
-    component: () => import('../views/front/Home.vue')
-
-
-  }
-
+    ...front
 ]
 
 const router = new VueRouter({

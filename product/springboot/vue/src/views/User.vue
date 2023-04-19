@@ -108,7 +108,6 @@
     <el-dialog title="用户信息" :visible.sync="vis" width="30%" >
       <el-table :data="albums" border stripe>
         <el-table-column prop="name" label="相册名称"></el-table-column>
-
       </el-table>
     </el-dialog>
   </div>

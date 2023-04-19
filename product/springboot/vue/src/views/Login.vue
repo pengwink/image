@@ -102,6 +102,16 @@ export default {
               // setRoutes()
               this.$router.push("/")
               this.$message.success("登录成功")
+              console.log(res.data)
+              if(res.data.roles==='ROLE_USER') {
+                this.$router.push("/app")
+                // let params=xxxxx;
+                // let token=this.zipJson(JSON.stringify(this.$cookie.get('token')))//加密的token
+                // window.open("http://localhost:8088/");
+
+              }else{
+                this.$router.push("/")
+              }
             } else {
               this.$message.error(res.msg)
             }
@@ -142,6 +152,7 @@ export default {
 
 .wrapper{
   background-image: url(../assets/bg.jpg);
+  opacity: 90%;
   height: 100%;
   width: 100%;
   background-color: #2d3a4b;
@@ -156,7 +167,7 @@ export default {
     padding: 35px 50px 10px;
     margin: 0 auto;
     background-color: #2d3a4b;
-    border-radius: 10px;
+    border-radius: 15px;
     opacity: 0.8;
   }
 

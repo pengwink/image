@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.RecordMapper">
+
+
+    <delete id="deleteRecordByIds" parameterType="list">
+        delete from record where userId=#{userId} and id in
+        (
+        <foreach collection="list" item="item" index="index" separator=",">
+        #{item}
+        </foreach>
+        )
+    </delete>
+
+
+</mapper>

@@ -3,8 +3,22 @@
     <div style="height: 60px; line-height: 60px; font-size: 20px; padding-left: 50px; color: white;
       background-color: rgba(0,0,0,0.2)">图片管理系统</div>
     <div class="regist-form" >
-      <div style="margin: 20px 0; text-align: center; font-size: 24px"><b>注 册</b></div>
+      <div style="margin: 20px 0; text-align: center; font-size: 30px;color: #fff"><b>注 册</b></div>
       <el-form :model="user" :rules="rules" ref="userForm">
+        <el-form-item  prop="phone">
+          <el-input
+              placeholder="请输入手机号码"
+              v-model="user.phone"
+              size="medium"
+          ></el-input>
+        </el-form-item>
+        <el-form-item  prop="email">
+          <el-input
+              placeholder="请输入邮箱地址"
+              v-model="user.email"
+              size="medium"
+          ></el-input>
+        </el-form-item>
         <el-form-item prop="username">
           <el-input placeholder="请输入账号" size="medium" prefix-icon="el-icon-user" v-model="user.username"></el-input>
         </el-form-item>
@@ -24,6 +38,35 @@
 </template>
 
 <script>
+let validateEmail = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("邮箱不能为空！"));
+  }
+  else {
+    const reg=/^[1-9][0-9]{4,}@qq.com$/
+    if(reg.test(value)){
+      callback();
+    }else {
+      return callback(new Error("邮箱格式不正确！"));
+    }
+  }
+};
+var checkPhone = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('手机号不能为空'));
+  } else {
+    //验证手机号
+    const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+    //验证区号
+    const phoneReg = /^\d{3}-\d{8}|\d{4}-\d{7}$/
+    console.log(reg.test(value));
+    if (reg.test(value)||phoneReg.test(value)) {
+      callback();
+    } else {
+      return callback(new Error('请输入正确的联系电话'));
+    }
+  }
+}
 export default {
   name: "Login",
   data() {
@@ -42,6 +85,8 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
+        email: [{ required: true, validator: validateEmail, trigger: "blur" }],
+        phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
       }
     }
   },
@@ -53,6 +98,7 @@ export default {
             this.$message.error("两次输入的密码不一致")
             return false
           }
+          console.log(this.user)
           this.request.post("/user/register", this.user).then(res => {
             if(res.code === '200') {
               this.$message.success("注册成功")

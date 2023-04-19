@@ -1,6 +1,8 @@
 package com.example.springboot.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.entity.AllTimeType;
+import com.example.springboot.entity.ImageEnca;
 import com.example.springboot.entity.Photo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -21,4 +23,14 @@ public interface IPhotoService extends IService<Photo> {
     public Photo getAlbumId(Photo photo);
 
     public Photo getTypeId(Photo photo);
+
+    public boolean isChinese(String name);
+
+    AllTimeType selectTimeType(Integer userId);
+
+    ImageEnca selectAllImage(Integer userId, Integer currentPage, Integer pageSize);
+
+    ImageEnca selectAllImageByType(Integer userId, Integer currentPage, Integer pageSize, String imageType);
+
+    ImageEnca selectAllImageByTime(Integer userId, Integer currentPage, Integer pageSize, String imageDate);
 }

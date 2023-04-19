@@ -31,8 +31,8 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
       <el-table-column prop="albumName" label="相册名称"></el-table-column>
-      <el-table-column prop="userNickname" label="所属用户id 外键"></el-table-column>
-      <el-table-column prop="typeName" label="类型id"></el-table-column>
+      <el-table-column prop="userNickname" label="所属用户"></el-table-column>
+      <el-table-column prop="typeName" label="类型"></el-table-column>
       <el-table-column prop="name" label="图片名称"></el-table-column>
       <el-table-column label="图片">
         <template slot-scope="scope">
@@ -41,8 +41,8 @@
         </template>
       </el-table-column>
       <el-table-column prop="content" label="图片详情"></el-table-column>
-      <el-table-column prop="photoTime" label="图片创建时间"></el-table-column>
-      <el-table-column prop="photoRight" label="图片权限 1可访问、0不可访问">
+      <el-table-column prop="photoTime" label="图片创建时间" sortable></el-table-column>
+      <el-table-column prop="photoRight" label="图片权限">
         <template slot-scope="scope">
           <el-tag type="primary" v-if="scope.row.photoRight === 1">可访问</el-tag>
           <el-tag  type="warning" v-if="scope.row.photoRight === 0">不可访问</el-tag>
@@ -60,7 +60,8 @@
           <el-tag  type="warning" v-if="scope.row.isStandard === 0">不符合</el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column prop="isAgree" label="点赞量" sortable></el-table-column>
+      <el-table-column prop="isCollect" label="收藏量" sortable></el-table-column>
       <el-table-column label="操作"  width="180" align="center">
         <template slot-scope="scope">
           <el-button type="success" round @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
@@ -101,13 +102,25 @@
         <el-form-item label="类型">
           <el-input v-model="form.typeName" autocomplete="off"></el-input>
         </el-form-item>
+
+        <el-form-item label="图片">
+          <el-upload
+              action="http://localhost:9090/file/upload"
+              :show-file-list="false"
+              list-type="picture-card"
+              :on-success="handleImgSuccess"
+              :before-upload="handleBefore"
+          >
+            <img v-if="form.img" :src="form.img" class="imgstyle">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+
+          </el-upload>
+<!--          <el-dialog :visible.sync="dialogVisible">-->
+<!--            <img width="100%" :src="dialogImageUrl" alt="">-->
+<!--          </el-dialog>-->
+        </el-form-item>
         <el-form-item label="图片名称">
           <el-input v-model="form.name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="图片">
-          <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgSuccess">
-            <el-button size="small" type="primary">点击上传</el-button>
-          </el-upload>
         </el-form-item>
         <el-form-item label="图片详情">
           <el-input v-model="form.content" autocomplete="off"></el-input>
@@ -116,15 +129,28 @@
           <el-date-picker v-model="form.photoTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="图片权限">
-          <el-input v-model="form.photoRight" autocomplete="off"></el-input>
+<!--          <el-input v-model="form.photoRight" autocomplete="off"></el-input>-->
+          <el-switch
+              v-model="form.photoRight"
+              active-color="#13ce66"
+              inactive-color="#D1D0CE"
+              :active-value=1
+              :inactive-value=0>
+          </el-switch>
         </el-form-item>
         <el-form-item label="图片状态">
-          <el-input v-model="form.photoStatue" autocomplete="off"></el-input>
+          <el-switch
+              v-model="form.photoStatue"
+              autocomplete="off"
+              active-color="#13ce66"
+              inactive-color="#D1D0CE"
+              :active-value=1
+              :inactive-value=0>
+          </el-switch>
         </el-form-item>
-        <el-form-item label="是否符合分类规范">
-          <el-input v-model="form.isStandard" autocomplete="off"></el-input>
-        </el-form-item>
-
+<!--        <el-form-item label="是否符合分类规范">-->
+<!--          <el-input v-model="form.isStandard" autocomplete="off"></el-input>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -139,6 +165,10 @@ export default {
   name: "Photo",
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisible: false,
+      autoUpload: false,
+      file :"",
       tableData: [],
       total: 0,
       pageNum: 1,
@@ -164,10 +194,11 @@ export default {
       }).then(res => {
         this.tableData = res.data.records
         this.total = res.data.total
+        console.log(res.data.records)
       })
     },
     save() {
-      this.request.post("/photo", this.form).then(res => {
+          this.request.post("/photo", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
@@ -184,8 +215,32 @@ export default {
         }
       })
     },
-    handleImgSuccess(res){
+    handleImgSuccess(res,file){
+      this.$forceUpdate();
       this.form.img = res
+    },
+    handleBefore(file){
+      let acceptFileType = ['jpeg','jpg','png','gif']
+      let type = file.name.split(".").slice(-1)[0].toLowerCase()
+      if(!acceptFileType.includes(type)){
+        setTimeout(() => {
+          this.$notify({
+            title: "温馨提示",
+            message: "格式错误！",
+            type: "error"
+          })
+        },50)
+        return false
+      }
+      this.form.name = file.name.split('.')[0]
+      return true;
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
     handleAdd() {
       this.dialogFormVisible = true
@@ -222,7 +277,6 @@ export default {
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val
     },
     delBatch() {
@@ -245,12 +299,10 @@ export default {
       this.load()
     },
     handleSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
     handleCurrentChange(pageNum) {
-      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     },
@@ -278,5 +330,10 @@ export default {
 <style>
 .headerBg {
   background: #eee!important;
+}
+.imgstyle {
+  width: 146px;
+  height: 146px;
+  display: block;
 }
 </style>

@@ -88,10 +88,22 @@
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="相册状态">
-          <el-input v-model="form.statue" autocomplete="off"></el-input>
+          <el-switch
+              v-model="form.statue"
+              active-color="#13ce66"
+              inactive-color="#D1D0CE"
+              :active-value=1
+              :inactive-value=0>
+          </el-switch>
         </el-form-item>
         <el-form-item label="相册权限">
-          <el-input v-model="form.righte" autocomplete="off"></el-input>
+          <el-switch
+              v-model="form.righte"
+              active-color="#13ce66"
+              inactive-color="#D1D0CE"
+              :active-value=1
+              :inactive-value=0>
+          </el-switch>
         </el-form-item>
         <el-form-item label="相册创建时间">
           <el-date-picker v-model="form.creatTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>

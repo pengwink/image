@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -49,5 +51,23 @@ public class Album implements Serializable {
 
     @TableField(exist = false)
     private String username;
+    @TableField(exist = false)
+    private Integer imageNumber;
 
+    @TableField(exist = false)
+    private String time;
+    @TableField(exist = false)
+    List<Photo> image;
+
+    public Album(String time, List<Photo> image) {
+        this.time = time;
+        this.image = image;
+    }
+
+    public Album() {
+
+    }
+    public List<Photo> getImage() {
+        return image;
+    }
 }

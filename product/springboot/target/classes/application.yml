@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/image?serverTimezone=GMT%2b8
+    url: jdbc:mysql://localhost:3306/image?serverTimezone=Asia/Shanghai
     username: root
     password: 12345678
 
@@ -24,7 +24,7 @@ files:
 servlet:
   multipart:
     # 单个文件大小
-    max-file-size:  500MB
+    max-file-size:  100MB
     # 设置总上传的文件大小
     max-request-size:  1000MB
 # 服务模块

@@ -62,9 +62,17 @@ public class Photo implements Serializable {
 
     @TableField(exist = false)
     private String albumName;
-
+    @TableField(exist = false)
+    private String userName;
     @TableField(exist = false)
     private String userNickname;
     @TableField(exist = false)
     private String typeName;
+    @TableField(exist = false)
+    private Integer isAgree;
+
+    @TableField(exist = false)
+    private Integer isCollect;
+    @TableField(exist = false)
+    private Integer imageId;
 }

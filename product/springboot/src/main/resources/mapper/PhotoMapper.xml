@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.springboot.mapper.PhotoMapper">
-
-    <select id="findPage" resultType="com.example.springboot.entity.Photo">
-        select photo.*,`user`.nickname as userNickname,`album`.`name` as albumName,type.`name` as typeName from photo
+    <resultMap id="pagePhoto" type="com.example.springboot.entity.Photo">
+        <result column="id" property="id"></result>
+        <result column="album_id" property="albumId"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="type_id" property="typeId"></result>
+        <result column="name" property="name"></result>
+        <result column="img" property="img"></result>
+        <result column="content" property="content"></result>
+        <result column="photo_time" property="photoTime"></result>
+        <result column="photo_right" property="photoRight"></result>
+        <result column="photo_statue" property="photoStatue"></result>
+        <result column="is_standard" property="isStandard"></result>
+<!--        <collection property="isAgree" javaType="Integer" ofType="com.example.springboot.entity.Agree">-->
+<!--            <result column="photo_id" property="isAgree" />-->
+<!--        </collection>-->
+    </resultMap>
+    <select id="findPage" resultMap="pagePhoto">
+        select photo.*,`user`.nickname as userNickname,`album`.`name` as albumName,type.`name` as typeName,COUNT(DISTINCT agree.id) as isAgree,COUNT(DISTINCT collect.id) as isCollect from photo
         left join `user` on photo.user_id = user.id
         left join album on photo.album_id = album.id
-        left join type on photo.type_id = type.id
-        left join type t
-        on photo.type_id = t.id
+        left join `type` on photo.type_id = type.id
+        LEFT JOIN agree on photo.id = agree.photo_id
+        left JOIN collect on photo.id = collect.photo_id
         <where>
             <if test="name != null and name != ''">
-                and name like concat('%',#{name},%)
+                and name like concat('%',#{name},'%')
             </if>
         </where>
+        GROUP BY photo.id
     </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.example.springboot.controller.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -13,4 +15,8 @@ public class UserDTO {
     private String nickname;
     private String avatarUrl;
     private String token;
+    private String roles;
+    private String email;
+
+    private String phone;
 }
