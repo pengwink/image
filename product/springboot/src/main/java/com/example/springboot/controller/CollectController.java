@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.net.URLEncoder;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.entity.Agree;
+import com.example.springboot.entity.Operation;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -41,14 +43,23 @@ public class CollectController {
     private final String now = DateUtil.now();
 
     // 新增或者更新
-    @PostMapping
-    public Result save(@RequestBody Collect collect) {
-        if (collect.getId() == null) {
-            //collect.setTime(DateUtil.now());
-            //collect.setUser(TokenUtils.getCurrentUser().getUsername());
+    @PostMapping("/save")
+    public Result save(@RequestParam("uid") Integer uid,@RequestParam("pid") Integer pid) {
+        Collect collect = new Collect();
+        if (uid != null && pid != null) {
+            collect.setUserId(uid);
+            collect.setPhotoId(pid);
+            collect.setIsCollect(1);
+            Collect c =collectService.sellectCollect(collect);
+            if(c!=null){
+                collectService.removeById(c.getId());
+                return Result.error(Operation.photoAgree.getName(),"sucess");
+            }else{
+                collectService.saveOrUpdate(collect);
+                return Result.success();
+            }
         }
-        collectService.saveOrUpdate(collect);
-        return Result.success();
+        return Result.error("600","fail");
     }
 
     @DeleteMapping("/{id}")
@@ -111,9 +122,7 @@ public class CollectController {
         writer.flush(out, true);
         out.close();
         writer.close();
-
         }
-
     /**
      * excel 导入
      * @param file
@@ -129,10 +138,8 @@ public class CollectController {
         collectService.saveBatch(list);
         return Result.success();
     }
-
     private User getUser() {
         return TokenUtils.getCurrentUser();
     }
-
 }
 

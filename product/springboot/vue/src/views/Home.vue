@@ -1,27 +1,30 @@
 <template>
   <div id="main">
     <!-- 顶部菜单 ref:组件对象，获取高度 horizontal:横向导航栏-->
-    <el-menu :default-active="activeIndex" ref="top_menu" mode="horizontal" @select="handleSelect"
-             background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :style="displayTopMenu">
-      <el-menu-item index="all">全 部 图 片</el-menu-item>
-      <el-submenu index="type" style="width:130px;">
-        <template slot="title">{{ typeTitle }}</template>
-        <el-menu-item v-for="(item, index) in imageTypes " :key="index" :index="item">{{ item }}</el-menu-item>
+    <el-menu :default-active="activeIndex" class="elm" ref="top_menu" mode="horizontal" @select="handleName"
+             background-color="#545c64" text-color="#fff"  active-text-color="#ffd04b" :style="displayTopMenu">
+<!--      <el-menu-item index="all">全 部 图 片</el-menu-item>-->
+      <el-submenu index="all" style="width:130px;" >
+        <template slot="title">{{ userTitle }}</template>
+        <el-menu-item  v-for="(item) in InfoUser " :key="item.id" :index="item.nickname" @click="UserModel(item.id)" >{{ item.nickname }}</el-menu-item>
       </el-submenu>
-      <el-submenu index="time" style="width:160px">
-        <template slot="title">{{ timeTitle }}</template>
+      <el-submenu index="type" style="width:130px;" >
+        <template slot="title">{{ typeTitle }}</template>
+        <el-menu-item  v-for="(item, index) in imageTypes " :key="index" :index="item">{{ item }}</el-menu-item>
+      </el-submenu>
+      <el-submenu index="time" style="width:120px">
+        <template slot="title" style="align-content: center">{{ timeTitle }}</template>
         <el-menu-item v-for="(item, index) in imageTimes" :key="index" :index="item">{{ item }}</el-menu-item>
       </el-submenu>
+<!--      <el-menu-item index="search">-->
+<!--        <el-select style="padding: 0px 20px" v-model="value" multiple filterable remote reserve-keyword-->
+<!--                   :placeholder="placeholder" :remote-method="remoteMethod" :loading="loading">-->
+<!--          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--      </el-menu-item>-->
 
-      <el-menu-item index="search">
-        <el-select style="padding: 0px 20px" v-model="value" multiple filterable remote reserve-keyword
-                   :placeholder="placeholder" :remote-method="remoteMethod" :loading="loading">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-menu-item>
-
-      <el-menu-item :index="'search,' + value[0]">搜 索</el-menu-item>
+<!--      <el-menu-item :index="'search,' + value[0]">搜 索</el-menu-item>-->
     </el-menu>
 
     <!-- 选中菜单 -->
@@ -99,6 +102,8 @@ export default {
   data() {
     return {
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      uid: JSON.parse(localStorage.getItem("user")).id,
+      selectUid:this.uid,
       page_size: [10, 15, 20, 25, 30, 40],
       options: ['s', 's'],
       value: [''],
@@ -111,6 +116,7 @@ export default {
       activeIndex: 'all',
       timeTitle: '拍 摄 时 间',
       typeTitle: '图 片 类 别',
+      userTitle: '用 户 昵 称',
       arrPath: ['all'],   //存放当前菜单路径
       placeholder: '请输入关键词查询图片',
       isRouterAlive: true,
@@ -138,11 +144,6 @@ export default {
       currentRowData: null, //当前行相册数据对象
       //相册数据
       albumData: [
-        // {
-        //   albumName: '',
-        //   albumImg: '',
-        //   albumId: '',
-        // }
         {
           name: '',
           albumImg: '',
@@ -156,8 +157,9 @@ export default {
         width: '13%',
         height: '29%',
       },
-      imageTypes: ['美女', '宠物', '植物'],//所有图片类型
+      imageTypes: ['宠物', '植物'],//所有图片类型
       imageTimes: ['2021-8-26', '2022-9-23', '2022-9-26'],  //所有图片时间
+      InfoUser:[],
 
       //复选框
       checkAll: false,       //是否全选
@@ -184,7 +186,6 @@ export default {
   beforeCreate() {
   },
   mounted() {
-
     if (this.token == null) {
       this.$message({
         message: '登录已过期!',
@@ -193,9 +194,15 @@ export default {
       this.$router.push({ name: 'login' });
     }
     this.selectAllTimeType();
+    this.selectAllUser();
     this.selectAllImage();
   },
   methods: {
+    UserModel(id){
+      this.selectUid = id
+      this.handleSelect('', this.arrPath);
+      this.selectAllTimeType()
+    },
     // 添加到相册表格方法
     handleTableCurrentChange(val) {
       this.currentRowData = val;
@@ -212,7 +219,7 @@ export default {
       this.handleCheckIndexToId();
       var _this = this;
       const formData = new FormData();
-      console.log(this.currentRowData)
+      // console.log(this.currentRowData)
       formData.append('imageId', this.checkedImgId);
       formData.append('albumId', this.currentRowData.id);
       this.axios({
@@ -265,8 +272,6 @@ export default {
           1;
         }
       })
-
-
     },
     downloadPicture(imgSrc, name) {
       var index = imgSrc.lastIndexOf(".");
@@ -290,25 +295,16 @@ export default {
         type: 'warning'
       }).then(() => {
         this.handleCheckIndexToId();
+        let ids =  this.checkedImgId;
         var _this = this;
         const formData = new FormData();
-        formData.append('token', this.token);
-        formData.append('imageId', this.checkedImgId);
-        this.axios({
-          url: this.$serveUrL + "/image/delete",
-          method: "post",
-          data: formData
-        }).then(function (resp) {
-          if (resp.data.status == "success") {
-            _this.$message({
-              message: '图片删除成功！',
-              type: 'success'
-            });
+        this.request.post("/photo/del/batch", ids).then(res => {
+          if (res.code === '200') {
+            this.$message.success("批量删除成功")
             _this.handleCheckAllChange(false);
-            _this.handleSelect('', _this.arrPath);
-          }
-          else {
-            1;
+            this.selectAllImage("all",this.arrPath,this.selectUid)
+          } else {
+            this.$message.error("批量删除失败")
           }
         })
       })
@@ -316,6 +312,7 @@ export default {
     selectAlbums() {
       var _this = this;
       const formData = new FormData();
+      formData.append("userId",this.selectUid)
       this.axios({
         url: this.$serveUrL + "/album/selectAlbumName",
         headers: {
@@ -324,7 +321,7 @@ export default {
         method: "post",
         data: formData
       }).then(function (resp) {
-        console.log(resp)
+        // console.log(resp)
         if (resp.data.status == "success") {
           _this.albumData = resp.data.data;
         }
@@ -333,9 +330,30 @@ export default {
         }
       })
     },
+    selectAllUser(){
+      var _this = this;
+      const formData = new FormData();
+      let requestApi = '/user';
+      this.axios({
+        url: this.$serveUrL + requestApi,
+        headers: {
+          'token': this.token //设置token 其中K名要和后端协调好
+        },
+        method: "get",
+        data: formData
+      }).then(function (resp) {
+        if (resp.data.code == 200) {
+          let data = resp.data.data;
+          console.log(data)
+          _this.InfoUser = data;
+          _this.isRouterAlive = !_this.isRouterAlive;
+        }
+      })
+    },
     selectAllTimeType() {
       var _this = this;
       const formData = new FormData();
+      formData.append("uid",this.selectUid)
       let requestApi = '/photo/selectTimeType';
       this.axios({
         url: this.$serveUrL + requestApi,
@@ -345,7 +363,6 @@ export default {
         method: "post",
         data: formData
       }).then(function (resp) {
-
         if (resp.data.status == "success") {
           let data = resp.data.data;
           // console.log(data)
@@ -356,12 +373,13 @@ export default {
         }
       })
     },
-    handleSelect(value, path) {
+    handleName(value, path){
       this.arrPath = path;
+      let itemid = this.selectUid
       value
       switch (path[0]) {
         case "all": {
-          this.selectAllImage('', '');
+          this.userTitle = path[1]
           this.timeTitle = '拍 摄 时 间';
           this.typeTitle = '图 片 类 别';
           break;
@@ -369,13 +387,13 @@ export default {
         case "type": {
           this.typeTitle = path[1];
           this.timeTitle = '拍 摄 时 间';
-          this.selectAllImage('type', path[1]);
+          this.selectAllImage('type', path[1],itemid);
           break;
         }
         case "time": {
           this.timeTitle = path[1];
           this.typeTitle = '图 片 类 别';
-          this.selectAllImage('time', path[1]);
+          this.selectAllImage('time', path[1],itemid);
           break;
         }
         case "search": {
@@ -384,11 +402,42 @@ export default {
         default: break;
       }
     },
-    selectAllImage(mode, value) {
-      // console.log(value)
+    handleSelect(value, path) {
+     let itemid = this.selectUid
+      this.arrPath = path;
+      value
+      switch (path[0]) {
+        case "all": {
+          this.selectAllImage('', '',itemid);
+          this.userTitle = path[1]
+          this.timeTitle = '拍 摄 时 间';
+          this.typeTitle = '图 片 类 别';
+          break;
+        }
+        case "type": {
+          this.typeTitle = path[1];
+          this.timeTitle = '拍 摄 时 间';
+          this.selectAllImage('type', path[1],itemid);
+          break;
+        }
+        case "time": {
+          this.timeTitle = path[1];
+          this.typeTitle = '图 片 类 别';
+          this.selectAllImage('time', path[1],itemid);
+          break;
+        }
+        case "search": {
+          break;
+        }
+        default: break;
+      }
+    },
+    selectAllImage(mode, value,user) {
+      console.log(user)
       var _this = this;
       const formData = new FormData();
       let requestApi = '/photo/selectAll';
+      formData.append("userId", user);
       formData.append("currentPage", this.currentPage);
       formData.append("pageSize", this.pageSize);
       if (mode == "type") {
@@ -595,8 +644,12 @@ export default {
   top: 10%;
   transform: translate(-50%, -10%);
 }
+
 </style>
 <style >
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+  min-width: 120px!important;
+}
 .el-checkbox__inner {
   background-color: white;
   opacity: 0.9;

@@ -2,63 +2,83 @@
   <div class="al">
     <!--我的相册-->
     <el-row class="al-row" v-if="myalbum">
-     <el-col :span="5" class="al-col" v-for="item in datalist" :key="item.gid">
-       <div class="al-two" v-if="item.num==0">
-          <div class="al-one" :style="{backgroundImage:'url('+bgurl+')'}" @click="detail(item.gid)"></div>
+     <el-col :span="5" class="al-col" v-for="item in datalist" :key="item.id">
+       <div class="al-two" v-if="item.imageNumber==0">
+          <div class="al-one" :style="{backgroundImage:'url('+item.albumImg+')'}" @click="detail(item.id)"></div>
         </div>
-        <div class="al-two" v-else-if="item.num==1">
-          <div class="al-one" :style="{backgroundImage:'url('+item.list[0].position+')'}" @click="detail(item.gid)"></div>
+        <div class="al-two" v-else-if="item.imageNumber==1">
+          <div class="al-one" :style="{backgroundImage:'url('+item.image[0].img+')'}" @click="detail(item.id)"></div>
         </div>
-        <div class="al-two" v-else-if="item.num>1" :style="{backgroundImage:'url('+item.list[1].position+')'}">
-          <div class="al-one" :style="{backgroundImage:'url('+item.list[0].position+')'}" @click="detail(item.gid)"></div>
+        <div class="al-two" v-else-if="item.imageNumber>1" :style="{backgroundImage:'url('+item.image[0].img+')'}">
+          <div class="al-one" :style="{backgroundImage:'url('+item.albumImg+')'}" @click="detail(item.id)"></div>
         </div>
         <ul class="al-ul">
           <li class="al-name">{{item.gallery_name}}</li>
-          <li class="alli-btn"><el-button class="al-btn" icon="el-icon-edit" @click="changeal(item.gid,item.gallery_name,item.status,item.description)"></el-button></li>
-          <li class="al-num">{{item.num}}张</li>
-          <li class="al-open" v-if="item.status==0">公开</li>
+          <li class="alli-btn">
+            <el-button class="al-btn" icon="el-icon-edit" @click="handleEdit(item)"></el-button></li>
+          <li class="al-num">{{item.imageNumber}}张</li>
+          <li class="al-open" v-if="item.righte == 1">公开</li>
           <li class="al-open" v-else>私密</li>
+          <p>{{item.name}}</p>
         </ul>
+
+       <el-dialog :visible.sync="dialogFormVisible">
+         <el-form class="album-dia">
+           <el-form-item label="相册名称" :label-width="formLabelWidth1">
+             <el-input v-model="form.name" autocomplete="off"></el-input>
+           </el-form-item>
+           <el-form-item label="相册封面" :label-width="formLabelWidth1">
+             <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgSuccess">
+               <el-button size="small" type="primary" >点击上传</el-button>
+             </el-upload>
+           </el-form-item>
+           <el-form-item label="是否公开" :label-width="formLabelWidth2">
+             <el-select v-model="form.righte" placeholder="请选择是否公开">
+               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+             </el-select>
+           </el-form-item>
+           <el-form-item label="相册创建时间" :label-width="formLabelWidth1">
+             <el-date-picker v-model="form.creatTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
+           </el-form-item>
+         </el-form>
+         <div slot="footer" class="dialog-footer">
+           <el-button @click="dialogFormVisible = false">取 消</el-button>
+           <el-popconfirm
+               class="ml-5"
+               confirm-button-text='确定'
+               cancel-button-text='取消'
+               icon="el-icon-info"
+               icon-color="red"
+               title="确定删除吗？"
+               @confirm="del(item.id)"
+           >
+             <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
+           </el-popconfirm>
+           <el-button type="primary" @click="save">确 定</el-button>
+         </div>
+       </el-dialog>
+
       </el-col>
     </el-row>
       <!--其他用户的相册-->
       <el-row class="al-row" v-else>
-      <el-col :span="5" class="al-col" v-for="item in datalist" v-if="item.status==0" :key="item.gid">
-       <div class="al-two" v-if="item.num==0">
-          <div class="al-one" :style="{backgroundImage:'url('+bgurl+')'}" @click="detail(item.gid)"></div>
+      <el-col :span="5" class="al-col" v-for="item in datalist" v-if="item.righte==1" :key="item.id">
+        <div class="al-two" v-if="item.imageNumber==0">
+          <div class="al-one" :style="{backgroundImage:'url('+item.albumImg+')'}" @click="detail(item.id)"></div>
         </div>
-        <div class="al-two" v-else-if="item.num==1">
-          <div class="al-one" :style="{backgroundImage:'url('+item.list[0].position+')'}" @click="detail(item.gid)"></div>
+        <div class="al-two" v-else-if="item.imageNumber==1">
+          <div class="al-one" :style="{backgroundImage:'url('+item.image[0].img+')'}" @click="detail(item.id)"></div>
         </div>
-        <div class="al-two" v-else-if="item.num>1" :style="{backgroundImage:'url('+item.list[1].position+')'}">
-          <div class="al-one" :style="{backgroundImage:'url('+item.list[0].position+')'}" @click="detail(item.gid)"></div>
+        <div class="al-two" v-else-if="item.imageNumber>1" :style="{backgroundImage:'url('+item.image[0].img+')'}">
+          <div class="al-one" :style="{backgroundImage:'url('+item.albumImg+')'}" @click="detail(item.id)"></div>
         </div>
         <ul class="al-ul">
           <li class="al-name">{{item.gallery_name}}</li>
-          <li class="al-num">{{item.num}}张</li>
+          <li class="al-num">{{item.imageNumber}}张</li>
         </ul>
       </el-col>
     </el-row>
-    <el-dialog :visible.sync="changealbum">
-      <el-form class="album-dia">
-            <el-form-item label="相册名称" :label-width="formLabelWidth1">
-              <el-input v-model="albumname" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="相册描述" :label-width="formLabelWidth1">
-              <el-input v-model="albuminfo" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="是否公开" :label-width="formLabelWidth2">
-              <el-select v-model="status" placeholder="请选择是否公开">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="changealbum = false">取 消</el-button>
-            <el-button type="danger" @click="deletealbum(gid)">删 除</el-button>
-            <el-button type="primary" @click="edit(gid)">确 定</el-button>
-          </div>
-    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -66,21 +86,22 @@ export default {
   name: "album",
   data() {
     return {
+      form:{},
       style: "",
       bgurl:'http://188.131.192.194/head_images/Wmyn4BVtK5ZyeZvpTOd5SfIbAYJWVt6lvQdPvhpl.gif',
       comName: this.$route.path,
       uid:this.$route.query.uid,
       datalist:[],
-      changealbum:false,
+      dialogFormVisible:false,
       albumname:'',
       albuminfo:'',
       options:[
         {
-          value: 0,
+          value: 1,
           label: "公开"
         },
         {
-          value: 1,
+          value: 0,
           label: "私密"
         }
       ],
@@ -88,19 +109,36 @@ export default {
       gid:'',
       formLabelWidth1: "100px",
       formLabelWidth2: "100px",
-      myalbum:this.$route.query.uid==localStorage.getItem('uid')?true:false,
+      myalbum:this.$route.query.uid==JSON.parse(localStorage.getItem("user")).id?true:false,
     };
   },
   created(){
       this.getalbum()
   },
   methods: {
+    handleImgSuccess(res){
+      this.form.albumImg = res
+    },
+    handleEdit(row) {
+      this.form = JSON.parse(JSON.stringify(row))
+      this.dialogFormVisible = true
+    },
+    del(id) {
+      this.request.delete("/album/" + id).then(res => {
+        if (res.code === '200') {
+          this.$message.success("删除成功")
+          this.getalbum()
+        } else {
+          this.$message.error("删除失败")
+        }
+      })
+    },
      getalbum(){
-      this.$http.post('/api/galleryList',{uid:this.uid},{emulateJSON:true})
+      this.request.post('/album/selectAlbumUser',this.uid)
       .then(res=>{
-        console.log(res);
-        
-        this.datalist=Object.assign(res.body);
+        this.datalist=res.data;
+        console.log(this.datalist);
+
       })
     },
     changeal(gid,name,status,desc){
@@ -110,24 +148,18 @@ export default {
       this.status=status;
       this.albuminfo=desc;
     },
-    edit(gid){
-      this.$http.post('/api/galleryUpdate',{gid:gid,uid:this.uid,gallery_name:this.albumname,status:this.status,description:this.albuminfo},{emulateJSON:true})
-      .then(res=>{
-        if (res.body.message=="修改成功") {
-          this.$message({
-              message: "修改成功",
-              type: "success",
-              customClass: "zIndex"
-            });
+    save() {
+      this.form.userId = this.uid
+      this.request.post("/album", this.form).then(res => {
+        if (res.code === '200') {
+          this.$message.success("保存成功")
+          this.dialogFormVisible = false
           this.getalbum()
-          this.changealbum=false;
-        }else{
-          this.$message({
-              message: "修改失败",
-              type: "danger",
-              customClass: "zIndex"
-            });
-          this.changealbum=false;
+        }else if(res.code === '600') {
+          this.$message.error("无法找到该用户")
+        }
+        else {
+          this.$message.error("保存失败")
         }
       })
     },

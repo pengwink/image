@@ -14,7 +14,7 @@
       </el-row>
     </el-header>
     <el-main class="user-main">
-        <router-view></router-view>
+        <router-view @refreshUser="getUser"></router-view>
     </el-main>
   </el-container>
 </template>
@@ -43,13 +43,18 @@ export default {
         this.flag1 = false;
         this.flag2 = true;
         this.flag3 = false;
-      } else if (this.comName == "/setting") {
-        this.$router.push({path:'/user/setting'});
-        this.flag1 = false;
-        this.flag2 = false;
-        this.flag3 = true;
-      } 
+      }
     },
+    getUser() {
+      let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
+      if (username) {
+        // 从后台获取User数据
+        this.request.get("/user/username/" + username).then(res => {
+          // 重新赋值后台的最新User数据
+          this.user = res.data
+        })
+      }
+    }
   },
   created () {
     this.comName = this.$route.path;

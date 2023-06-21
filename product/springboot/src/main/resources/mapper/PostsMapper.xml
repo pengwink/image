@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.springboot.mapper.PostsMapper">
-
+    <resultMap id="postsResult" type="com.example.springboot.entity.Posts">
+        <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="descr" property="descr"></result>
+        <result column="img" property="img"></result>
+        <result column="time" property="time"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="hide_radio" property="hideRadio"></result>
+        <result column="is_pass" property="isPass"></result>
+        <result column="username" property="username"></result>
+    </resultMap>
+    <insert id="addPosts" parameterType="list" useGeneratedKeys="true" keyProperty="id">
+        insert into posts(id,name,descr,img,time,user_id,hide_radio,is_pass) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+             null,
+            #{item.name},
+            #{item.descr},
+            #{item.img},
+            #{item.time},
+            #{item.userId},
+            #{item.hideRadio},
+            #{item.isPass}
+            )
+        </foreach>
+    </insert>
+    <select id="selectAl" resultType="com.example.springboot.entity.Posts">
+        select posts.*,`user`.nickname as username,`user`.avatar_url as headImage from posts
+        left join `user` on posts.user_id = user.id
+        where is_pass =1
+    </select>
 </mapper>

@@ -2,30 +2,44 @@
   <div class="collection">
     <el-row type="flex" justify="center">
       <el-col :span="23">
-        <waterfall class="collec-div" :col="col" :width="itemWidth" :gutterWidth="gutterWidth" :data="imgs" @loadmore="loadmore"
+        <waterfall class="collec-div" :gap="gap" :col="col" :width="itemWidth" :gutterWidth="gutterWidth" :data="imgs" @loadmore="loadmore"
       @scroll="scroll">
       <template>
         <div class="collec-item" v-for="img in imgs" :key="img.id">
           <div class="collec-img">
-            <img :src="img.position">
+            <img :src="img.img">
           </div>
           <div class="collec-shadow">
           <div class="collec-det">
             <el-button type="text" @click="show(img)">查看详情</el-button>
           </div>
           <div class="collec-line">
-            <div class="collec-btn"><el-button type="text" @click="deletecollection(img.pid)">取消收藏</el-button></div>
+            <div class="collec-btn"><el-button type="text" @click="deletecollection(img.collectId)">取消收藏</el-button></div>
           </div>
       </div>
         </div>
       </template>
     </waterfall>
+        <!-- 分页条 -->
+        <div style="padding: 20px 0">
+          <el-pagination
+              :current-page.sync="pageNum"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :page-sizes="[5, 10, 20,30,40]"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total">
+          </el-pagination>
+        </div>
+
       </el-col>
+
     </el-row>
 
     <el-dialog :visible.sync="dialogVisible" width="70%">
       <div class="colec-dia-cont">
-        <img :src="diaitem.position">
+        <img :src="diaitem.img">
       </div>
     </el-dialog>
   </div>
@@ -36,13 +50,23 @@ export default {
   name: "collection",
   data() {
     return {
+      token:JSON.parse(localStorage.getItem("user")).token, //token凭证
       dialogVisible: false,
       diaitem: [],
       activeName: "comments",
       comment: "",
       uid:this.$route.query.uid, 
       col:5,
-      imgs:[]
+      gap:5,
+      avatar:'http://188.131.192.194/head_images/5LSk0zVtyKDq9UciiWPab50dwjoNI2324KtwSyBD.jpeg',
+      imgs:[],
+      total: 0,
+      pageNum: 1,
+      pageSize: 10,
+      previewImageUrL: [
+        'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+      ],
+      previewImage:"",
     };
   },
   created(){
@@ -50,29 +74,52 @@ export default {
   },
   computed: {
     itemWidth() {
-      return 138 * 0.5 * (document.documentElement.clientWidth /310);
+      return 138 * 0.5 * (document.documentElement.clientWidth /400);
     },
     gutterWidth() {
-      return 9 * 0.5 * (document.documentElement.clientWidth /400);
+      return 9 * 0.5 * (document.documentElement.clientWidth /500);
     }
   },
   methods: {
+    handleSizeChange(pageSize) {
+      this.pageSize = pageSize
+      this.getmycollection()
+    },
+    handleCurrentChange(pageNum) {
+      this.pageNum = pageNum
+      this.getmycollection()
+    },
     scroll(scrollData) {
     },
     loadmore(index) {
     },
     getmycollection(){
-      this.$http.post('/api/collect',{uid:this.uid},{emulateJSON:true})
-      .then(res=>{
-        console.log(res);
-        
-        this.imgs = Object.assign(res.body);
+      const formData = new FormData();
+      formData.append("currentPage", this.pageNum);
+      formData.append("pageSize", this.pageSize);
+      formData.append("userId", this.uid);
+      let requestApi = '/photo/selectCollectImage';
+      this.axios({
+        url: this.$serveUrL + requestApi,
+        headers: {
+          'token': this.token //设置token 其中K名要和后端协调好
+        },
+        method: "post",
+        data: formData
       })
+          .then(res=>{
+            console.log(res)
+            this.total = res.data.data.totalCount
+            // this.imgs = Object.assign(res.data.records);
+            this.$set(this, 'imgs',Object.assign(res.data.data.images));
+            this.previewImageUrL = res.data.data.previewImageUrL;
+          })
     },
     deletecollection(pid){
-      this.$http.post('/api/pictureCollectDelete',{uid:this.uid,pid:pid},{emulateJSON:true})
-      .then(res=>{
-        if (res.body.message=="取消收藏成功") {
+      this.request.delete("/collect/" + pid)
+          .then(res => {
+            console.log(res)
+        if (res.code==200) {
           this.$message({
               message: "取消收藏成功",
               type: "success",
@@ -100,12 +147,12 @@ export default {
 .collection {
   min-height: 300px;
   height: auto;
-  display: flex;
   width: auto;
   margin: 0 auto;
 }
 .collec-div {
   margin: 20px auto;
+  margin-left:3%;
 }
 .collec-item{
   text-align: center;
@@ -113,7 +160,7 @@ export default {
   position: relative;
 }
 .collec-img img{
-  width: 100%;
+  width: 90%;
   height: 100%;
 }
 

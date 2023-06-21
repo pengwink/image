@@ -5,16 +5,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-/**
- * @program: MemoryBack
- * @description 返回所有图片的时间和类型结果
- * @author: xiaohua
- * @create: 2022-09-02 14:00
- **/
+
 public class AllTimeType {
     private List<String> imageType;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JSONField(format = "yyyy-MM-dd")
     private List<String> imageDate;

@@ -61,7 +61,6 @@
 
     <div :style="empty2">
       <el-empty :image-size="200" description="暂无图片">
-        <el-button type="primary" @click="$router.push({ name: 'upload' });">去上传</el-button>
       </el-empty>
     </div>
 

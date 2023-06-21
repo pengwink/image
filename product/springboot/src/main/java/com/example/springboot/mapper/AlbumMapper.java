@@ -21,7 +21,7 @@ public interface AlbumMapper extends BaseMapper<Album> {
 
     Page<Album> findPage(Page<Album> page,@Param("name") String name);
 
-    @Select(" select album.id,album.name,album_img,count(DISTINCT photo.id) as imageNumber from album  left join photo on photo.album_id = album.id  where album.user_id=#{userId}  group by album.id")
+    @Select(" select album.id,album.name,album.statue,album.righte,album_img,count(DISTINCT photo.id) as imageNumber from album  left join photo on photo.album_id = album.id  where album.user_id=#{userId}  group by album.id")
     @Results(id="AlbumResultMap" ,value = {
             @Result(property = "id",column = "id"),
     })

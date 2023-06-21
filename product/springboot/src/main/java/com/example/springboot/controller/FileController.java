@@ -13,6 +13,7 @@ import com.example.springboot.entity.Operation;
 import com.example.springboot.entity.User;
 import com.example.springboot.mapper.FileMapper;
 import com.example.springboot.service.RecordService;
+import com.example.springboot.utils.FileServeUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,8 @@ import static org.apache.commons.lang3.SystemUtils.getUserName;
 public class FileController {
 //    String fileUsername = "\\"+getUser().getUsername()+"\\";
 //    String fileUsername ="";
+@Resource
+private FileServeUtil fileServeUtil;
     @Value("${files.upload.path}")
     private String fileUploadPath;
 
@@ -52,43 +55,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     public String upload(HttpServletRequest req,@RequestParam MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();
-        String type = FileUtil.extName(originalFilename);
-        long size = file.getSize();
-        // 定义一个文件唯一的标识码
-        String fileUUID = IdUtil.fastSimpleUUID() + StrUtil.DOT + type;
-        File uploadFile = new File(Constant.FILE_UPLOAD_DIR+ fileUUID);
-        // 判断配置的文件目录是否存在，若不存在则创建一个新的文件目录
-        File parentFile = uploadFile.getParentFile();
-        if(!parentFile.exists()) {
-            parentFile.mkdirs();
-        }
-
-        String url;
-        // 获取文件的md5
-        String md5 = SecureUtil.md5(file.getInputStream());
-        // 从数据库查询是否存在相同的记录
-        Files dbFiles = getFileByMd5(md5);
-        if (dbFiles != null) {
-            url = dbFiles.getUrl();
-        } else {
-            // 上传文件到磁盘
-            file.transferTo(uploadFile);
-            // 数据库若不存在重复文件，则不删除刚才上传的文件
-            url = "http://localhost:9090/file/"+ fileUUID;
-            System.out.println(url);
-        }
-
-
-        // 存储数据库
-        Files saveFile = new Files();
-        saveFile.setName(originalFilename);
-        saveFile.setType(type);
-        saveFile.setSize(size/1024); // 单位 kb
-        saveFile.setUrl(url);
-        saveFile.setMd5(md5);
-        fileMapper.insert(saveFile);
-        return url;
+        return fileServeUtil.uploadServe(req,file);
     }
 
     /**
@@ -117,18 +84,7 @@ public class FileController {
     }
 
 
-    /**
-     * 通过文件的md5查询文件
-     * @param md5
-     * @return
-     */
-    private Files getFileByMd5(String md5) {
-        // 查询文件的md5是否存在
-        QueryWrapper<Files> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("md5", md5);
-        List<Files> filesList = fileMapper.selectList(queryWrapper);
-        return filesList.size() == 0 ? null : filesList.get(0);
-    }
+
 
     @PostMapping("/update")
     public Result update(@RequestBody Files files) {

@@ -9,7 +9,6 @@
     </div>
 
     <div style="margin: 10px 0">
-      <el-button  type="primary" round  @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -21,34 +20,21 @@
       >
         <el-button type="danger" round slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
+      <!-- <el-upload action="http://localhost:9090/photo/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+        <el-button type="info" round class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>
+      </el-upload>
+      <el-button type="info" round @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button> -->
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBg'"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
-      <el-table-column prop="username" label="所属用户">
-      </el-table-column>
-      <el-table-column prop="name" label="相册名称"></el-table-column>
-      <el-table-column prop="statue" label="相册状态">
-        <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.statue === 1">启用</el-tag>
-          <el-tag type="danger" v-if="scope.row.statue === 0">禁用</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="righte" label="相册权限">
-        <template slot-scope="scope">
-          <el-tag type="primary" v-if="scope.row.righte === 1">公开</el-tag>
-          <el-tag  type="warning" v-if="scope.row.righte === 0">私密</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="creatTime" label="相册创建时间"></el-table-column>
-      <el-table-column label="图片"><template slot-scope="scope"><el-image style="width: 100px; height: 100px" :src="scope.row.albumImg" :preview-src-list="[scope.row.img]">
-
-      </el-image></template></el-table-column>
-
+      <el-table-column prop="nickname" label="所属用户"></el-table-column>
+      <el-table-column prop="pname" label="发布名称"></el-table-column>
+      <el-table-column prop="content" label="评论内容"></el-table-column>
+      <el-table-column prop="time" label="发表时间" sortable></el-table-column>
       <el-table-column label="操作"  width="180" align="center">
         <template slot-scope="scope">
-          <el-button type="success" round @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
@@ -71,45 +57,29 @@
           :page-sizes="[2, 5, 10, 20]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
+          :total="total"
+      >
       </el-pagination>
     </div>
 
     <el-dialog title="信息" :visible.sync="dialogFormVisible" width="40%" :close-on-click-modal="false">
       <el-form label-width="120px" size="small" style="width: 80%; margin: 0 auto">
         <el-form-item label="所属用户">
-          <el-input v-model="form.username" autocomplete="off"></el-input>
+          <el-input v-model="form.nickname" autocomplete="off" readOnly></el-input>
         </el-form-item>
-        <el-form-item label="相册名称">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-form-item label="发布名称">
+          <el-input v-model="form.pname" autocomplete="off" readOnly></el-input>
         </el-form-item>
-        <el-form-item label="相册状态">
-          <el-switch
-              v-model="form.statue"
-              active-color="#13ce66"
-              inactive-color="#D1D0CE"
-              :active-value=1
-              :inactive-value=0>
-          </el-switch>
+        <el-form-item label="内容">
+          <el-input v-model="form.content" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="相册权限">
-          <el-switch
-              v-model="form.righte"
-              active-color="#13ce66"
-              inactive-color="#D1D0CE"
-              :active-value=1
-              :inactive-value=0>
-          </el-switch>
-        </el-form-item>
-        <el-form-item label="相册创建时间">
-          <el-date-picker v-model="form.creatTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="相册封面">
-          <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgSuccess">
-            <el-button size="small" type="primary" >点击上传</el-button>
-          </el-upload>
+        <el-form-item label="发表时间">
+          <el-date-picker v-model="form.time" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
 
+<!--        <el-form-item label="是否符合分类规范">-->
+<!--          <el-input v-model="form.isStandard" autocomplete="off"></el-input>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -121,9 +91,13 @@
 
 <script>
 export default {
-  name: "Album",
+  name: "Photo",
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisible: false,
+      autoUpload: false,
+      file :"",
       tableData: [],
       total: 0,
       pageNum: 1,
@@ -140,7 +114,7 @@ export default {
   },
   methods: {
     load() {
-      this.request.get("/album/page", {
+      this.request.get("/comment/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -149,16 +123,16 @@ export default {
       }).then(res => {
         this.tableData = res.data.records
         this.total = res.data.total
-        console.log(this.tableData);
+        console.log(res.data.records)
       })
     },
     save() {
-      this.request.post("/album", this.form).then(res => {
+          this.request.post("/comment", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
           this.load()
-        }else if(res.code === '600') {
+        } else if(res.code === '600') {
           this.$message.error("无法找到该用户")
         }
         else {
@@ -166,8 +140,12 @@ export default {
         }
       })
     },
-    handleImgSuccess(res){
-      this.form.albumImg = res
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
     handleAdd() {
       this.dialogFormVisible = true
@@ -194,7 +172,7 @@ export default {
        })
     },
     del(id) {
-      this.request.delete("/album/" + id).then(res => {
+      this.request.delete("/comment/" + id).then(res => {
         if (res.code === '200') {
           this.$message.success("删除成功")
           this.load()
@@ -204,7 +182,6 @@ export default {
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val
     },
     delBatch() {
@@ -213,7 +190,7 @@ export default {
         return
       }
       let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
-      this.request.post("/album/del/batch", ids).then(res => {
+      this.request.post("/comment/del/batch", ids).then(res => {
         if (res.code === '200') {
           this.$message.success("批量删除成功")
           this.load()
@@ -227,12 +204,10 @@ export default {
       this.load()
     },
     handleSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
     handleCurrentChange(pageNum) {
-      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     },
@@ -246,7 +221,7 @@ export default {
       window.open(url)
     },
     exp() {
-      window.open("http://localhost:9090/album/export")
+      window.open("http://localhost:9090/photo/export")
     },
     handleExcelImportSuccess() {
       this.$message.success("导入成功")
@@ -260,5 +235,10 @@ export default {
 <style>
 .headerBg {
   background: #eee!important;
+}
+.imgstyle {
+  width: 146px;
+  height: 146px;
+  display: block;
 }
 </style>

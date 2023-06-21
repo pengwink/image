@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.net.URLEncoder;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.entity.Operation;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -41,14 +42,23 @@ public class AgreeController {
     private final String now = DateUtil.now();
 
     // 新增或者更新
-    @PostMapping
-    public Result save(@RequestBody Agree agree) {
-        if (agree.getId() == null) {
-            //agree.setTime(DateUtil.now());
-            //agree.setUser(TokenUtils.getCurrentUser().getUsername());
+    @PostMapping("/save")
+    public Result save(@RequestParam("uid") Integer uid,@RequestParam("pid") Integer pid) {
+        Agree agree = new Agree();
+        if (uid != null && pid != null) {
+            agree.setUserId(uid);
+            agree.setPhotoId(pid);
+            agree.setIsAgree(1);
+            Agree a =agreeService.sellectAgree(agree);
+            if(a!=null){
+                agreeService.removeById(a.getId());
+                return Result.error(Operation.photoAgree.getName(),"sucess");
+            }else{
+                agreeService.saveOrUpdate(agree);
+                return Result.success();
+            }
         }
-        agreeService.saveOrUpdate(agree);
-        return Result.success();
+        return Result.error("600","fail");
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.example.springboot.service;
 
+import com.example.springboot.controller.dto.TypeDTO;
 import com.example.springboot.entity.Photo;
 import com.example.springboot.entity.Type;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -25,4 +26,6 @@ public interface ITypeService extends IService<Type> {
     List<Photo> findPhoto(Integer id,Integer userId);
 
     List<Type> typeAllPhoto();
+
+    List<TypeDTO> listTypeDto();
 }

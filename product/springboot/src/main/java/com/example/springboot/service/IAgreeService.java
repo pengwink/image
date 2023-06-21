@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IAgreeService extends IService<Agree> {
 
+     Agree sellectAgree(Agree agree);
 }

@@ -30,5 +30,4 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
     public JwtInterceptor jwtInterceptor() {
         return new JwtInterceptor();
     }
-
 }

@@ -11,18 +11,28 @@ import javax.servlet.ServletOutputStream;
 import java.net.URLEncoder;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.aip.contentcensor.AipContentCensor;
+import com.baidu.aip.contentcensor.EImgType;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Constants;
 import com.example.springboot.entity.*;
 import com.example.springboot.exception.ServiceException;
+import com.example.springboot.mapper.TypeMapper;
 import com.example.springboot.service.ITypeService;
 import com.example.springboot.service.RecordService;
+import com.example.springboot.utils.FileServeUtil;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springboot.common.Result;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,16 +53,146 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/photo")
 public class PhotoController {
-
+    @Resource
+    private FileServeUtil fileServeUtil;
     @Resource
     private ITypeService typeService;
+    @Resource
+    private TypeMapper typeMapper;
     @Resource
     private IPhotoService photoService;
     @Resource
     private RecordService recordService;
     private final String now = DateUtil.now();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    // 新增或者更新
+
+    /**
+     * 图片上传
+     * @param req
+     * @param albumName
+     * @param albumId
+     * @param content
+     * @param imgType
+     * @param imgDate
+     * @param multipartFiles
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/upload")
+    public JSONObject upload(HttpServletRequest req, String albumName, Integer albumId,String imgName, String content,String imgTypeId,String imgType,String imgDate, @RequestParam("file")MultipartFile[] multipartFiles) throws Exception {
+        Integer photoRight=1;
+        Integer photoStatue=1;
+        Integer isStandrd = null;
+        List<String> imgNameL = Arrays.asList(imgName.split(","));
+        QueryWrapper<Type> queryWrapper = new QueryWrapper<>();
+        System.out.println(imgTypeId);
+        queryWrapper.eq("name","imgType");
+        Integer typeId = null;
+        Type type = typeMapper.selectOne(queryWrapper);
+        JSONObject jsonObject = new JSONObject();
+        User user = getUser();
+        Integer userId;
+        if(user!=null) {
+            userId = user.getId();
+        }
+        else{
+            jsonObject.put("status","fail");
+            return jsonObject;
+        }
+        Date date = new Date(); // this object contains the current date value
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(imgDate.equals("null")||imgDate.equals("")){
+            imgDate=formatter.format(date);
+        }
+        List<Photo> imgList = new ArrayList<>();
+        if(multipartFiles.length ==1&&imgNameL!=null){
+            String fileName = imgNameL.get(0);
+            if(isNumeric(imgTypeId)){
+                typeId = Integer.parseInt(imgTypeId);
+            }else if(type != null){
+                if(type!=null){
+                    typeId = type.getId();
+                }
+                else{
+                    typeId = -1;
+                }
+            }
+            else{
+                if(photoService.isChinese(fileName)){
+                    isStandrd=1;
+                    //图片名称与类别进行匹配
+                    String PhotoName =fileName;
+                    Type  t = typeService.matche(PhotoName);
+                    Type t2 = typeService.matcheType(PhotoName);
+                    if(t!=null){
+                        typeId =t.getId();
+                    }
+                    else if (t==null && t2!=null){
+                        t = typeService.matcheType(fileName);
+                        typeId =t.getId();
+                    }
+                }else{
+                    isStandrd =0;
+                }
+            }
+            String imageUrL = fileServeUtil.uploadServe(req,multipartFiles[0]);
+
+//            String compressUrL = fileServeUtil.CompressImage(fileServeUtil.ServPathToAP(imageUrL), (float) m.getSize());
+            imgList.add(new Photo(null,albumId,userId,typeId,fileName,imageUrL,content,imgDate,photoRight,photoStatue,isStandrd));
+        }else{
+            //将所有上传的图片对象存入集合
+//            for (MultipartFile m:multipartFiles){
+                for(int i = 0;i<multipartFiles.length;i++){
+                MultipartFile m = multipartFiles[i];
+                String fileName = imgNameL.get(i);
+                if(photoService.isChinese(fileName)){
+                    isStandrd=1;
+                    //图片名称与类别进行匹配
+                    String PhotoName =fileName;
+                    Type  t = typeService.matche(PhotoName);
+                    Type t2 = typeService.matcheType(PhotoName);
+                    if(t!=null){
+                        typeId =t.getId();
+                    }
+                    else if (t==null && t2!=null){
+                        t = typeService.matcheType(PhotoName);
+                        typeId =t.getId();
+                    }
+                }else{
+                    if(isNumeric(imgTypeId)){
+                        typeId = Integer.parseInt(imgTypeId);
+                    }else{
+                        typeId=-1;
+                    }
+                    isStandrd =0;
+                }
+                String imageUrL = fileServeUtil.uploadServe(req,m);
+                if(imageUrL=="fail"){
+                    jsonObject.put("status","fail");
+                    return jsonObject;
+                }
+//            String compressUrL = fileServeUtil.CompressImage(fileServeUtil.ServPathToAP(imageUrL), (float) m.getSize());
+                    System.out.println(imageUrL);
+
+                imgList.add(new Photo(null,albumId,userId,typeId,fileName,imageUrL,content,imgDate,photoRight,photoStatue,isStandrd));
+            }
+        }
+        photoService.uploadImage(req,imgList, userId, albumId, albumName, imgType);
+        if(true){
+            jsonObject.put("status","success");
+            recordService.addRecord(req, Operation.uploadImage.getName(),imgList.size(),userId);
+        }
+        else{
+            for(Photo i:imgList){
+                String imageUrL = i.getImg();
+                fileServeUtil.deleteServe(imageUrL);
+            }
+            jsonObject.put("status","fail");
+        }
+        return jsonObject;
+    }
+//    // 新增或者更新
     @PostMapping
     public Result save(HttpServletRequest req, @RequestBody Photo photo) {
         if (photo.getId() == null) {
@@ -61,7 +201,9 @@ public class PhotoController {
         }
         System.out.println(photo);
         try{
-            photoService.getUserId(photo);
+            if(photo.getUserId()==null){
+                photoService.getUserId(photo);
+            }
             if (photo.getAlbumName()!=null&&photo.getAlbumName()!=""){
                 photoService.getAlbumId(photo);
             }
@@ -85,6 +227,7 @@ public class PhotoController {
             }else{
                 photo.setIsStandard(0);
             }
+
             photoService.saveOrUpdate(photo);
         }
         catch(ServiceException e){
@@ -177,22 +320,30 @@ public class PhotoController {
         recordService.addRecord(req, Operation.importImage.getName(), 1,getUser().getId());
         return Result.success();
     }
+    /**
+     * 查询指定相册图片
+     * @return
+     */
+    @RequestMapping("/albumPhoto")
+    public JSONObject selectAlbumUser(@RequestBody String pid){
+        JSONObject jsonObject = new JSONObject();
+        Integer id = Integer.parseInt(pid);
+        List<Photo> photoVOS =photoService.albumPhoto(id);
+        jsonObject.put("status","success");
+        jsonObject.put("data", photoVOS);
+        return jsonObject;
+    }
 /**
  * 查询图片的时间和类型
  */
     @RequestMapping("/selectTimeType")
-    public JSONObject selectTimeType(){
+    public JSONObject selectTimeType( @RequestParam("uid") Integer uid){
         JSONObject jsonObject = new JSONObject();
-        User user = getUser();
-        Integer userId;
-        if(user!=null) {
-            userId = user.getId();
-        }
-        else{
+        if(uid==null){
             jsonObject.put("status","fail");
             return jsonObject;
         }
-        AllTimeType allTimeTypeVO = photoService.selectTimeType(userId);
+        AllTimeType allTimeTypeVO = photoService.selectTimeType(uid);
         jsonObject.put("data",allTimeTypeVO);
         jsonObject.put("status","success");
         return jsonObject;
@@ -203,22 +354,42 @@ public class PhotoController {
      * @return
      */
     @RequestMapping("/selectAll")
-    public JSONObject selectAllImage(String token,Integer currentPage,Integer pageSize){
+    public JSONObject selectAllImage(String token,Integer currentPage,Integer pageSize,Integer userId){
         JSONObject jsonObject = new JSONObject();
-        User user = getUser();
-        Integer userId;
-        if(user!=null) {
-            userId = user.getId();
+        if(userId!=null) {
+            ImageEnca image = photoService.selectAllImage(userId,currentPage,pageSize);
+            jsonObject.put("data",image);
+            jsonObject.put("status","success");
         }
         else{
             jsonObject.put("status","fail");
-            return jsonObject;
         }
-
-        ImageEnca image = photoService.selectAllImage(userId,currentPage,pageSize);
-        jsonObject.put("data",image);
-        jsonObject.put("status","success");
         return jsonObject;
+    }
+    /**
+     *分页根据收藏查询所有图片
+     * @return
+     */
+    @RequestMapping("/selectCollectImage")
+    public JSONObject selectCollectImage(String token,Integer currentPage,Integer pageSize,Integer userId){
+        JSONObject jsonObject = new JSONObject();
+        if(userId!=null) {
+            ImageEnca image = photoService.selectCollectImage(userId,currentPage,pageSize);
+            jsonObject.put("data",image);
+            jsonObject.put("status","success");
+        }
+        else{
+            jsonObject.put("status","fail");
+        }
+        return jsonObject;
+    }
+    /**
+     *查询所有
+     * @return
+     */
+    @GetMapping("/selectPhoto")
+    public Result selectPhoto(@RequestParam Integer id) {
+        return Result.success(photoService.selectPhoto(id));
     }
 
     /**
@@ -230,14 +401,9 @@ public class PhotoController {
      * @return
      */
     @RequestMapping("/selectAllByType")
-    public JSONObject selectAllImageByType(String token,Integer currentPage,Integer pageSize,String imageType){
+    public JSONObject selectAllImageByType(String token,Integer currentPage,Integer pageSize,String imageType,Integer userId){
         JSONObject jsonObject = new JSONObject();
-        User user = getUser();
-        Integer userId;
-        if(user!=null) {
-            userId = user.getId();
-        }
-        else{
+        if (userId==null){
             jsonObject.put("status","fail");
             return jsonObject;
         }
@@ -256,16 +422,10 @@ public class PhotoController {
      * @return
      */
     @RequestMapping("/selectAllByTime")
-    public JSONObject selectAllImageByTime(String token,Integer currentPage,Integer pageSize,String imageDate) throws ParseException {
+    public JSONObject selectAllImageByTime(String token,Integer currentPage,Integer pageSize,String imageDate,Integer userId) throws ParseException {
         JSONObject jsonObject = new JSONObject();
-        User user = getUser();
 //        Date imgDate = dateFormat.parse(imageDate);
-        System.out.println(imageDate);
-        Integer userId;
-        if(user!=null) {
-            userId = user.getId();
-        }
-        else{
+        if(userId==null){
             jsonObject.put("status","fail");
             return jsonObject;
         }
@@ -274,11 +434,60 @@ public class PhotoController {
         jsonObject.put("status","success");
         return jsonObject;
     }
+    /**
+     *查询排行榜
+     * @return
+     */
+    @RequestMapping("/selectTop")
+    public JSONObject selectTop(Integer agreeCollect,Integer limit){
+        JSONObject jsonObject = new JSONObject();
+        ImageEnca image = new ImageEnca();
+        if (agreeCollect==1){
+            image = photoService.selectAgreeTop(limit);
+        }else if(agreeCollect==0){
+            image = photoService.selectCollectTop(limit);
+        }
+        if(image!=null){
+            jsonObject.put("data",image);
+            jsonObject.put("status","success");
+        }
+        else{
+            jsonObject.put("status","fail");
+        }
+        return jsonObject;
+    }
 
+    /**
+     * 根据图片名称查询
+     * @return
+     */
+    @RequestMapping("/selectPhotoName")
+    public JSONObject selectPhoto(@RequestBody String keywords){
+        JSONObject jsonObject = new JSONObject();
+        User user = getUser();
+        Integer userId;
+        if(user!=null) {
+            userId = user.getId();
+        }
+        else{
+            jsonObject.put("status","fail");
+            return jsonObject;
+        }
 
+        List<Photo> images = photoService.selectPhotoName(keywords,userId);
+        jsonObject.put("data",images);
+        return jsonObject;
+    }
     private User getUser() {
         return TokenUtils.getCurrentUser();
     }
-
+    public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
+    }
 }
 

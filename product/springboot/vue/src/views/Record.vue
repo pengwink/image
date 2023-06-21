@@ -9,8 +9,6 @@
       </el-table-column>
       <el-table-column prop="number" label="数量" >
       </el-table-column>
-<!--      <el-table-column prop="ipv4" label="Ip地址">-->
-<!--      </el-table-column>-->
       <el-table-column prop="delete" label="删除" >
         <template slot-scope="scope">
           <el-button type="danger" size="mini" icon="el-icon-delete" circle
@@ -46,11 +44,6 @@ export default {
     selectAllRecord() {
       var _this = this;
       const formData = new FormData();
-      // this.axios({
-      //   url: this.$serveUrL+"/record/selectAll",
-      //   method: "post",
-      //   data: formData,
-      // })
       this.request.post("/record/selectAll", {
         params: {
           formData

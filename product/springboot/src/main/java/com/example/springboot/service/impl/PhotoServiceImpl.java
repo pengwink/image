@@ -12,14 +12,14 @@ import com.example.springboot.mapper.TypeMapper;
 import com.example.springboot.mapper.UserMapper;
 import com.example.springboot.service.IPhotoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -125,15 +125,17 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
      */
     @Override
     public AllTimeType selectTimeType(Integer userId) {
-        List<String> dates = photoMapper.selectAllImageTime(userId);
+        Set<String> dates = photoMapper.selectAllImageTime(userId);
         //将null时间删掉
-        for(int i=0;i<dates.size();i++){
-            if(dates.get(i)==null){
-                dates.remove(i);
-            }
-        }
+//        for(int i=0;i<dates.size();i++){
+//            if(dates.get==null){
+//                dates.remove(i);
+//            }
+//        }
+        List<String> datel = new ArrayList<>(dates);
+        Collections.sort(datel);
         List<String> strings = photoMapper.selectAllImageType(userId);
-        AllTimeType allTimeTypeVO = new AllTimeType(strings,dates);
+        AllTimeType allTimeTypeVO = new AllTimeType(strings,datel);
         return allTimeTypeVO;
     }
     /**
@@ -197,5 +199,75 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
         Integer integer = photoMapper.selectImageCountByTime(userId,imageDate);
         ImageEnca imageEnca = new ImageEnca(images,pres,integer);
         return imageEnca;
+    }
+//批量添加图片
+    @Override
+    public void uploadImage(HttpServletRequest req, List<Photo> imgList, Integer userId, Integer albumId, String albumName, String imgType) {
+        //添加图片
+        photoMapper.addImages(imgList);
+    }
+
+//    查询指定用户下的图片
+    @Override
+    public List<Photo> selectPhoto(Integer id) {
+        List<Photo> images = photoMapper.selectAllImage(id);
+        return images;
+    }
+    //    查询指定相册下的图片
+    @Override
+    public List<Photo> albumPhoto(Integer id) {
+        List<Photo> images = photoMapper.albumPhoto(id);
+        return images;
+    }
+
+    /**
+     * 分页按类型查询指定用户所有图片
+     * @param userId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ImageEnca selectCollectImage(Integer userId, Integer currentPage, Integer pageSize) {
+        PageHelper.startPage(currentPage,pageSize);
+        List<Photo> images = photoMapper.selectCollectImage(userId);
+        List<String> pres = new ArrayList<>();
+        for (Photo i:images){
+            pres.add(i.getImg());
+        }
+        Integer integer = photoMapper.selectCollectCount(userId);
+        ImageEnca imageEnca = new ImageEnca(images,pres,integer);
+        return imageEnca;
+    }
+
+    @Override
+    public ImageEnca selectAgreeTop(Integer limit) {
+        List<Photo> images = photoMapper.selectAgreeTop(limit);
+        List<String> pres = new ArrayList<>();
+        for (Photo i:images){
+            pres.add(i.getImg());
+        }
+        ImageEnca imageEnca = new ImageEnca(images,pres,limit);
+        return imageEnca;
+    }
+
+    @Override
+    public ImageEnca selectCollectTop(Integer limit) {
+        List<Photo> images = photoMapper.selectCollectTop(limit);
+        List<String> pres = new ArrayList<>();
+        for (Photo i:images){
+            pres.add(i.getImg());
+        }
+        ImageEnca imageEnca = new ImageEnca(images,pres,limit);
+        return imageEnca;
+    }
+
+    @Override
+    public List<Photo> selectPhotoName(String keywords, Integer userId) {
+        QueryWrapper<Photo> query = new QueryWrapper<Photo>();
+        query.eq("user_id",userId);
+        query.like("name",keywords);
+        List<Photo> images = photoMapper.selectList(query);
+        return images;
     }
 }

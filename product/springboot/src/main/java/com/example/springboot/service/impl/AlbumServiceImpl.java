@@ -50,6 +50,10 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             return null;
         }
         List<Album> partAlbumVO = albumMapper.selectAllAlbum(userId);
+        for(Album a: partAlbumVO){
+            List<Photo> images = albumMapper.selectAlbumImage(a.getId());
+            a.setImage(images);
+        }
         return partAlbumVO;
     }
 

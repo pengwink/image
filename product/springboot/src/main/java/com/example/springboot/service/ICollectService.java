@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICollectService extends IService<Collect> {
 
+    Collect sellectCollect(Collect collect);
 }

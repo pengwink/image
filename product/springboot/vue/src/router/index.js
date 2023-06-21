@@ -17,6 +17,7 @@ const routes=[
       {path: 'album',name: '相册管理',component:()=>import('../views/Album.vue')},
       {path: 'type',name: '类型管理',component:()=>import('../views/Type.vue')},
       {path: 'photo',name: '图片管理',component:()=>import('../views/Photo.vue')},
+      {path: 'comment',name: '图片管理',component:()=>import('../views/Comment.vue')},
       {path: 'person',name: '个人信息',component:()=>import('../views/Person.vue')},
       {path: 'password',name: '修改密码',component:()=>import('../views/Password.vue')},
       {path: 'file',name: '文件管理',component:()=>import('../views/File.vue')},

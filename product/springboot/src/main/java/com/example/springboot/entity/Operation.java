@@ -32,7 +32,9 @@ public enum Operation {
     deleteType("删除类型",22),
     importType("导入类型",23),
     exportType("导入类型",24),
-    updatePassword("修改密码",25);
+    updatePassword("修改密码",25),
+    addFabu("发布",26),
+    photoAgree("取消点赞",27);
     private String name;
     private Integer number;
 

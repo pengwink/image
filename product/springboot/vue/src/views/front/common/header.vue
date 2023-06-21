@@ -16,7 +16,15 @@
       <el-col :lg="2" :xs="2" :sm="2" :md="2" :xl="2" :class="['hel-col',flag3?'active-fb':'']">
         <el-button type="text" class="hbtn" @click="show('/publish')">发布作品</el-button>
       </el-col>
-      <el-col :xs="2" :sm="8" :md="10" :lg="11" :xl="12">&nbsp;</el-col>
+      <el-col :lg="1" :xs="1" :sm="1" :md="1" :xl="1">&nbsp;</el-col>
+      <el-col :lg="2" :xs="2" :sm="2" :md="2" :xl="2" :class="['hel-col',flag4?'active-fb':'']">
+        <el-button type="text" class="hbtn" @click="show('/ranking')">图片排行榜</el-button>
+      </el-col>
+      <el-col :lg="1" :xs="1" :sm="1" :md="1" :xl="1">&nbsp;</el-col>
+      <el-col :lg="2" :xs="2" :sm="2" :md="2" :xl="2" :class="['hel-col',flag4?'active-fb':'']">
+        <el-button type="text" class="hbtn" @click="show('/uploadImage')">上传</el-button>
+      </el-col>
+<!--      <el-col :xs="2" :sm="8" :md="10" :lg="11" :xl="12">&nbsp;</el-col>-->
 
       <div v-if="user==null">
         <el-col :lg="1" :xs="1" :sm="1" :md="1" :xl="1" class="hbtn1 hel-col">
@@ -30,24 +38,22 @@
         </el-col>
       </div>
       <div v-else>
-        <el-col :lg="1" :xs="1" :sm="1" :md="1" :xl="1" class="user">
-          <el-dropdown @command="dropcommand">
-<!--            <div class="he-username">{{user.nickname}}</div>-->
-              <el-image :src="user.avatarUrl" alt="" style="width: 30px; border-radius: 50%; position: relative;top:10px;right: 10px">
-              </el-image>
-            <span class="nickname" style="position: absolute;top: 15px">{{ user.nickname }}</span>
+          <el-dropdown @command="dropcommand" style="width: 150px; cursor: pointer; text-align: right;float: right">
+            <!--            <div class="he-username">{{user.nickname}}</div>-->
+            <div style="display: inline-block">
+              <img :src="user.avatarUrl" alt=""
+                   style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
+              <span>{{ user.nickname }}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
+            </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="setting">账号设置</el-dropdown-item>
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </el-col>
-      </div>
+
+        </div>
+
       <el-col :lg="1" :xs="1" :sm="1" :md="1" :xl="1" class="hbtn2 hel-col">
-        <div
-          :class="['huser',flag4?'h-message-btn-open':'h-message-btn-close']"
-          @click="show('/notice')"
-        ></div>
       </el-col>
     </el-row>
   </div>
@@ -58,10 +64,6 @@ import login from "../../Login.vue";
 import register from "../../Register.vue";
 export default {
   name: "myheader",
-  // components: {
-  //   login,
-  //   register
-  // },
   data() {
     return {
       comName: "/community",
@@ -69,6 +71,8 @@ export default {
       flag2: false,
       flag3: false,
       flag4: false,
+      flag5: false,
+      flag6: false,
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
       username: "",
       dialogtitle: "登录",
@@ -84,12 +88,16 @@ export default {
         this.flag2 = false;
         this.flag3 = false;
         this.flag4 = false;
+        this.flag5 = false;
+        this.flag6 = false;
       } else if (this.comName == "/community") {
         this.$router.push({ path: "/community" });
         this.flag1 = false;
         this.flag2 = true;
         this.flag3 = false;
         this.flag4 = false;
+        this.flag5 = false;
+        this.flag6 = false;
       } else if (this.comName == "/publish") {
         if (this.user) {
         this.$router.push({ path: "/publish" });
@@ -97,20 +105,59 @@ export default {
         this.flag2 = false;
         this.flag3 = true;
         this.flag4 = false;
+          this.flag5 = false;
+          this.flag6 = false;
       }else{
         this.$message({
                 message: "您还未登录",
                 type: "warning",
                 customClass: "zIndex"
               });
+        }
       }
-      } else if (this.comName == "/notice") {
+      else if (this.comName == "/ranking") {
+        if (this.user) {
+          this.$router.push({ path: "/ranking" });
+          this.flag1 = false;
+          this.flag2 = false;
+          this.flag3 = false;
+          this.flag4 = false;
+          this.flag5 = true;
+          this.flag6 = false;
+        }else{
+          this.$message({
+            message: "您还未登录",
+            type: "warning",
+            customClass: "zIndex"
+          });
+        }
+      }
+      else if (this.comName == "/uploadImage") {
+        if (this.user) {
+          this.$router.push({ path: "/uploadImage" });
+          this.flag1 = false;
+          this.flag2 = false;
+          this.flag3 = false;
+          this.flag4 = false;
+          this.flag5 = true;
+          this.flag6 = false;
+        }else{
+          this.$message({
+            message: "您还未登录",
+            type: "warning",
+            customClass: "zIndex"
+          });
+        }
+      }
+      else if (this.comName == "/notice") {
         if (localStorage.getItem("user")) {
           this.$router.push({ path: "/notice" });
           this.flag1 = false;
           this.flag2 = false;
           this.flag3 = false;
           this.flag4 = true;
+          this.flag5 = false;
+          this.flag6 = false;
         } else {
           this.$message({
             message: "您还未登录",
@@ -124,6 +171,8 @@ export default {
         this.flag2 = false;
         this.flag3 = false;
         this.flag4 = false;
+        this.flag5 = false;
+        this.flag6 = false;
       }
     },
     getinfo(uid) {
@@ -165,6 +214,7 @@ export default {
     }
   },
   created() {
+    this.getUser()
     console.log(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {})
     console.log(this.user.nickname)
     this.comName = this.$route.path;
@@ -245,8 +295,9 @@ export default {
   /*cursor: pointer;*/
 }
 .huser {
-  padding-top: 8px;
-  margin-left:20px;
+  padding-top: 10px;
+  margin-top: 5px;
+  /*margin-left:20px;*/
   width: 23px;
   height: 23px;
   cursor: pointer;
@@ -274,9 +325,9 @@ export default {
   margin-top: 3px;
 
 }
-.hbtn2 {
-  width: 35px !important;
-  padding-left: 15px !important;
+hbtn2 {
+  width: 10px !important;
+  padding-left: 5px !important;
   margin-top: 5px;
 }
 .active-tk {
@@ -303,7 +354,8 @@ export default {
 }
 .user {
   margin-top: 0px;
-  margin-left: 50px;
+  /*margin-right: 10px;*/
+  margin-left: -100px;
 }
 .user button {
   color: #000;
@@ -315,4 +367,5 @@ export default {
   /*padding-top:10px;*/
   /*margin-top: 0px;*/
 }
+
 </style>

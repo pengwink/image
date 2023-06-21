@@ -40,6 +40,10 @@
         <i class="el-icon-folder-opened"></i>
         <span slot="title">发布审核</span>
       </el-menu-item>
+      <el-menu-item index="/Comment">
+        <i class="el-icon-folder-opened"></i>
+        <span slot="title">评论管理</span>
+      </el-menu-item>
 <!--      <el-menu-item index="/upload">-->
 <!--        <i class="el-icon-folder-opened"></i>-->
 <!--        <span slot="title">上传管理</span>-->

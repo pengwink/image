@@ -13,7 +13,6 @@
         <result column="roles" property="roles"></result>
         <collection property="albums" javaType="java.util.ArrayList" ofType="com.example.springboot.entity.Album">
             <result column="name" property="name" />
-
         </collection>
     </resultMap>
     <select id="findPage" resultMap="pageUser">

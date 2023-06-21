@@ -2,6 +2,7 @@ package com.example.springboot.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -22,6 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel(value = "Photo对象", description = "")
+@NoArgsConstructor
 public class Photo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -75,4 +78,22 @@ public class Photo implements Serializable {
     private Integer isCollect;
     @TableField(exist = false)
     private Integer imageId;
+    @TableField(exist = false)
+    private Integer collectId;
+    @TableField(exist = false)
+    private Integer agreeId;
+
+    public Photo(Integer id, Integer albumId, Integer userId, Integer typeId, String name, String imageUrL, String content, String imgDate, Integer photoRight, Integer photoStatue, Integer isStandrd) {
+        this.id = id;
+        this.albumId = albumId;
+        this.userId = userId;
+        this.typeId = typeId;
+        this.name = name;
+        this.img = imageUrL;
+        this.content = content;
+        this.photoTime = imgDate;
+        this.photoRight = photoRight;
+        this.photoStatue = photoStatue;
+        this.isStandard = isStandrd;
+    }
 }

@@ -32,7 +32,6 @@
       <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
       <el-table-column prop="name" label="标题"></el-table-column>
       <el-table-column prop="descr" label="描述"></el-table-column>
-      <el-table-column prop="content" label="内容"></el-table-column>
       <el-table-column label="图片">
         <template slot-scope="scope">
           <el-image style="width: 100px; height: 100px" :src="scope.row.img" :preview-src-list="[scope.row.img]">
@@ -40,13 +39,24 @@
           </el-image>
         </template></el-table-column>
       <el-table-column prop="time" label="时间"></el-table-column>
-      <el-table-column prop="userId" label="发帖人"></el-table-column>
-      <el-table-column prop="hideRadio" label="是否显示"></el-table-column>
+<!--      <el-table-column prop="userId" label="发帖人"></el-table-column>-->
+      <el-table-column prop="hideRadio" label="是否显示">
+          <template slot-scope="scope">
+            <el-tag type="primary" v-if="scope.row.hideRadio === 1">显示</el-tag>
+            <el-tag  type="warning" v-if="scope.row.hideRadio === 0">隐藏</el-tag>
+          </template>
+      </el-table-column>
 <!--      <el-table-column prop="photoId" label="图片id"></el-table-column>-->
-      <el-table-column prop="isPass" label="审核通过"></el-table-column>
+      <el-table-column prop="isPass" label="审核通过">
+          <template slot-scope="scope">
+            <el-tag type="success" v-if="scope.row.isPass === 1">通过</el-tag>
+            <el-tag  type="danger" v-if="scope.row.isPass === 0">不通过</el-tag>
+          </template>
+      </el-table-column>
 
-      <el-table-column label="操作"  width="180" align="center">
+      <el-table-column label="操作"  width="300" align="center">
         <template slot-scope="scope">
+          <el-button type="warning" round @click="show(scope.row)" >查看内容 <i class="el-icon-edit"></i></el-button>
           <el-button type="success" round @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"
@@ -82,9 +92,6 @@
         <el-form-item label="描述">
           <el-input v-model="form.descr" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="内容">
-          <el-input v-model="form.content" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="封面">
           <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgUploadSuccess">
             <el-button size="small" type="primary">点击上传</el-button>
@@ -97,13 +104,25 @@
           <el-input v-model="form.userId" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="是否显示">
-          <el-input v-model="form.hideRadio" autocomplete="off"></el-input>
+          <el-switch
+              v-model="form.hideRadio"
+              active-color="#13ce66"
+              inactive-color="#D1D0CE"
+              :active-value=1
+              :inactive-value=0>
+          </el-switch>
         </el-form-item>
 <!--        <el-form-item label="图片id">-->
 <!--          <el-input v-model="form.photoId" autocomplete="off"></el-input>-->
 <!--        </el-form-item>-->
         <el-form-item label="审核通过">
-          <el-input v-model="form.isPass" autocomplete="off"></el-input>
+          <el-switch
+              v-model="form.isPass"
+              active-color="#13ce66"
+              inactive-color="#D1D0CE"
+              :active-value=1
+              :inactive-value=0>
+          </el-switch>
         </el-form-item>
 
       </el-form>
@@ -112,7 +131,23 @@
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="dialogVisible">
+      <div id="a">
+        <div class="mywork-item" v-for="(item,index) in picdetail" :key="index">
+          <div class="mywork-img">
+            <el-image id="b" :src="item.img" fit="cover"></el-image>
+          </div>
+          <div class="mywork-shadow">
+            <div class="mywork-det">
+              <el-button type="text" @click="show(item);getpicdetail(item.pid)">查看详情</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
+  <!--弹出对话框-->
+
 </template>
 
 <script>
@@ -128,14 +163,43 @@ export default {
       form: {},
       dialogFormVisible: false,
       multipleSelection: [],
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      uid: JSON.parse(localStorage.getItem("user")).id,
+      dialogVisible:false,
+      diaitem:{},
+      picdetail:{},
     }
   },
   created() {
     this.load()
   },
   methods: {
-    load() {
+    getpicdetail(pid) {
+      this.request.get("/posts/selectAlll", {
+        params: {
+          id: pid,
+          uid: this.uid
+        }
+      }).then(res => {
+        this.picdetail = Object.assign(res.data);
+        console.log(res);
+      })
+    },
+    show(item) {
+      if (this.uid) {
+        this.dialogVisible = true;
+        this.diaitem = item;
+        console.log(item)
+        this.getpicdetail(item.id)
+      } else {
+        this.$message({
+          message: "您还未登录",
+          type: "warning",
+          customClass: "zIndex"
+        })
+      }
+    },
+      load() {
       this.request.get("/posts/page", {
         params: {
           pageNum: this.pageNum,
@@ -249,5 +313,14 @@ export default {
 <style>
 .headerBg {
   background: #eee!important;
+}
+.el-dialog {
+  position: absolute;
+  margin: 0 auto 50px;
+  background: #FFF;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  box-sizing: border-box;
+  width: 50%;
 }
 </style>

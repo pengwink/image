@@ -21,9 +21,9 @@
       >
         <el-button  type="danger" round slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
-      <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
-        <el-button type="info" round class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>
-      </el-upload>
+<!--      <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
+<!--        <el-button type="info" round class="ml-5">导入 <i class="el-icon-bottom"></i></el-button>-->
+<!--      </el-upload>-->
       <el-button type="info" round @click="exp" class="ml-5">导出 <i class="el-icon-top"></i></el-button>
     </div>
 

@@ -1,5 +1,6 @@
 package com.example.springboot.mapper;
 
+import com.example.springboot.controller.dto.TypeDTO;
 import com.example.springboot.entity.Photo;
 import com.example.springboot.entity.Type;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -20,7 +21,7 @@ public interface TypeMapper extends BaseMapper<Type> {
 
     Type matche(@Param("name") String name);
     Type matcheType(@Param("name") String name);
-    @Select("select * from type where id in (select type_id from photo where user_id =#{userId} )")
+    @Select("select * from type where id in (select type_id from photo where user_id =#{userId} and photo_statue=1 )")
     List<Type> findImage(Integer userId);
 
     @Select("select * from photo  where user_id=#{userId} and type_id in (select id from type where id=#{id}) group by id order by id desc ")
@@ -28,4 +29,6 @@ public interface TypeMapper extends BaseMapper<Type> {
 
 
     List<Type> typeAllPhoto();
+
+    List<TypeDTO> listTypeDto();
 }

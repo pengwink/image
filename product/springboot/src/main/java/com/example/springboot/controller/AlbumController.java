@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Constants;
 import com.example.springboot.entity.Operation;
+import com.example.springboot.entity.Photo;
 import com.example.springboot.exception.ServiceException;
 import com.example.springboot.service.IUserService;
 import com.example.springboot.service.RecordService;
@@ -64,7 +65,9 @@ public class AlbumController {
             //album.setUser(TokenUtils.getCurrentUser().getUsername());
         }
         try{
-            albumService.getUserId(album);
+            if(album.getUserId()==null){
+                albumService.getUserId(album);
+            }
             albumService.saveOrUpdate(album);
             recordService.addRecord(req, Operation.createAlbum.getName()+"\""+album.getName()+"\"", 1,getUser().getId());
         }catch(Exception e){
@@ -93,11 +96,25 @@ public class AlbumController {
      * @return
      */
     @RequestMapping("/selectAlbumName")
-    public JSONObject selectAlbumName(String token){
+    public JSONObject selectAlbumName(String token,Integer userId){
         JSONObject jsonObject = new JSONObject();
-        User user = getUser();
-//        System.out.println(user.toString());
-        List<Album> partAlbumVOS = albumService.selectAllAlbum(user.getId());
+        if(userId==null){
+            userId = getUser().getId();
+        }
+        List<Album> partAlbumVOS = albumService.selectAllAlbum(userId);
+        jsonObject.put("status","success");
+        jsonObject.put("data", partAlbumVOS);
+        return jsonObject;
+    }
+
+    /**
+     * 查询用户下的相册
+     * @return
+     */
+    @RequestMapping("/selectAlbumUser")
+    public JSONObject selectAlbumUser(@RequestBody String uid){
+        JSONObject jsonObject = new JSONObject();
+        List<Album> partAlbumVOS = albumService.selectAllAlbum(Integer.parseInt(uid));
         jsonObject.put("status","success");
         jsonObject.put("data", partAlbumVOS);
         return jsonObject;
@@ -129,6 +146,9 @@ public class AlbumController {
      */
     @PostMapping("/removeImageFromAlbum")
     public Result removeImageFromAlbum(HttpServletRequest req,@RequestParam("imageId") List<Integer> imageId, Integer albumId) {
+        System.out.println(imageId);
+        System.out.println(albumId);
+        System.out.println(getUser().getId());
         albumService.removeImageToAlbum(req,albumId,imageId,getUser().getId());
         return Result.success();
     }

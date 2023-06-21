@@ -10,8 +10,15 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import './assets/icons/index'
 import * as echarts from "echarts";//引入echarts
-Vue.prototype.$echarts = echarts//挂载到vue实例，方便全局使用
+import Waterfall from 'vue-waterfall2'
+// main.js全局注册
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 
+Vue.prototype.$echarts = echarts//挂载到vue实例，方便全局使用
+Vue.use(Waterfall)
 Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false

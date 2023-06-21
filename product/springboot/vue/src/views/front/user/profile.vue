@@ -4,27 +4,24 @@
     <el-container>
       <el-main class="pr-title">
         <h5>用户名</h5>
-        <el-input v-model="username" class="pr-input"></el-input>
-        <h5 >性别</h5>
-        <el-select v-model="sex" placeholder="请选择">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
-        <h5 >生日</h5>
-        <div class="block">
-          <el-date-picker v-model="birth" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-        </div>
-        <h5>简介</h5>
-        <el-input v-model="desc" class="pr-input"></el-input>
-        <h5 >居住城市</h5>
-        <v-distpicker @province="changeprovince" @city="changecity" :province='province' :city='city' hide-area></v-distpicker>
+        <el-input v-model="user.nickname" class="pr-input"></el-input>
+        <h5 class="pr-title">手机号码</h5>
+        <el-input v-model="user.phone" :disabled="true" class="pr-input"></el-input>
+        <h5 class="pr-title">Email地址</h5>
+        <el-input v-model="user.email" :disabled="true" class="pr-input"></el-input>
         <el-button class="pr-btn" @click="save">保&nbsp;存</el-button>
       </el-main>
       <el-aside width="300px" class="pr-aside">
-        <img :src="avatar" class="pr-tx">
+        <el-upload
+            class="avatar-uploader"
+            action="http://localhost:9090/file/upload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+        >
+          <img v-if="user.avatarUrl" :src="user.avatarUrl" class="pr-tx">
+<!--          <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+        </el-upload>
         <br>
-        <input type="file" @change="changehead($event)" ref="avatarInput" style="display:none;">
-        <el-button class="pr-txbtn" size="mini" @click="setavatar">上传图片</el-button>
-        <el-button class="pr-txbtn" size="mini" @click="confirmset">确认修改</el-button>
       </el-aside>
     </el-container>
   </div>
@@ -39,7 +36,8 @@ export default {
   },
    data() {
       return {
-        uid:localStorage.getItem('uid'),
+        user: {},
+        uid: JSON.parse(localStorage.getItem("user")).id,
         picture: {},
         username:'',
         sex:0,
@@ -69,99 +67,52 @@ export default {
       }
    },
    created(){
-     this.getinfo()
+     this.getUser()
    },
    methods: {
-     changeprovince(a){
-       this.province=a.value;
+     getUser() {
+       let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
+       if (username) {
+         // 从后台获取User数据
+         this.request.get("/user/username/" + username).then(res => {
+           // 重新赋值后台的最新User数据
+           this.user = res.data
+           console.log(this.user)
+         })
+       }
      },
-     changecity(a){
-      this.city=a.value;
+     handleAvatarSuccess(res) {
+       this.user.avatarUrl = res
      },
-     getinfo(){
-       this.$http.post('/api/basicInfo',{uid:this.uid},{emulateJSON:true})
-     .then(result=>{
-       this.username=result.body[0].username;
-       this.sex=result.body[0].sex;
-       this.desc=result.body[0].introduce;
-       this.city=result.body[0].city;
-       this.province=result.body[0].province;
-       this.birth=result.body[0].birthday;
-       this.avatar=result.body[0].head_image;
-     })
-     },
-     updataInfo(){
-       this.$http.post('/api/updateInfo',{uid:this.uid,
-       username:this.username,
-       sex:this.sex,
-       birthday:this.birth,
-       introduce:this.desc,
-       province:this.province,
-       city:this.city
-       },{emulateJSON:true}).then(res=>{
-         console.log(res);
-         
-         if (res.body.message=="编辑成功") {
-          this.$message({
-              message: "修改成功",
-              type: "success",
-              customClass: "zIndex"
-            })   
-        }else{
-          this.$message({
-              message: "修改失败",
-              type: "danger",
-              customClass: "zIndex"
-            });
-        }
+     save() {
+       this.request.post("/user", this.user).then(res => {
+         if (res.code === '200') {
+           this.$message.success("保存成功")
+
+           // 触发父级更新User的方法
+           this.$emit("refreshUser")
+
+           // 更新浏览器存储的用户信息
+           this.getUser().then(res => {
+             res.token = JSON.parse(localStorage.getItem("user")).token
+             localStorage.setItem("user", JSON.stringify(res))
+           })
+
+         } else {
+           this.$message.error("保存失败")
+         }
        })
      },
-     save(){
-      // this.uploadimg();
-       this.updataInfo();  
-     },
      changehead(e){
+       console.log(e)
       var file = e.target.files[0]
       var reader = new FileReader()
       var that = this
       reader.readAsDataURL(file)
       reader.onload = function(e) {
-      that.avatar = this.result
+      that.user.avatar = this.result
       }
      },
-     setavatar(){
-       this.$refs.avatarInput.click();
-     },
-    uploadimg(){
-      var image = new FormData()
-      image.append('file', this.$refs.avatarInput.files[0])
-      this.$http.post('/api/upload',image)
-      .then(result=>{
-        this.updateavatar(this.uid,result.body.image)
-      })
-    },
-    updateavatar(uid,position){
-      this.$http.post('/api/headimageUpload',{uid:uid,position:position},{emulateJSON:true})
-      .then(res=>{
-       if (res.body.message=="修改成功") {
-          this.$message({
-              message: "修改头像成功",
-              type: "success",
-              customClass: "zIndex"
-            });
-        }else{
-          this.$message({
-              message: "修改头像失败",
-              type: "danger",
-              customClass: "zIndex"
-            });
-        }
-      })
-    },
-    confirmset(){
-      this.uploadimg()
-      
-    }
    }
 };
 </script>

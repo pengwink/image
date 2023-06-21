@@ -6,6 +6,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.springboot.mapper.TypeMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -39,8 +40,6 @@ public class Type implements Serializable {
     @ApiModelProperty("父节点")
     private Integer parentId;
 
-    @ApiModelProperty("排序")
-    private String orderby;
     @TableField(exist = false)
     private boolean flag=false;
 

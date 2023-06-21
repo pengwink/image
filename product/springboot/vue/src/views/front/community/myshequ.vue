@@ -8,17 +8,17 @@
           </li>
           <li class="sq-li2">
             <ul class="sq-ul2">
-              <li class="sq-name" v-text="username"></li>
-              <li>
-                <ul class="sq-ul3">
-                  <li>
-                      <el-button type="text" @click="show('follows');showfollows()">关注&nbsp;{{follows}}</el-button>
-                  </li>
-                  <li>
-                      <el-button type="text" @click="show('fans');showfans()">粉丝&nbsp;{{fans}}</el-button>
-                  </li>
-                </ul>
-              </li>
+              <li class="sq-name" :v-text="username"></li>
+<!--              <li>-->
+<!--                <ul class="sq-ul3">-->
+<!--                  <li>-->
+<!--                      <el-button type="text" @click="show('follows');showfollows()">关注&nbsp;{{follows}}</el-button>-->
+<!--                  </li>-->
+<!--                  <li>-->
+<!--                      <el-button type="text" @click="show('fans');showfans()">粉丝&nbsp;{{fans}}</el-button>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </li>-->
               <li class="sq-intr" v-text="introduction"></li>
             </ul>
           </li>
@@ -29,7 +29,7 @@
       <el-header>
         <el-row type="flex" justify="center" class="sq-head">
           <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1" :class="['sq-btn',flag1?'sq-btn-act':'']">
-            <el-button type="text" @click="show('mywork');showwork()">我的作品</el-button>
+            <el-button type="text" @click="show('mywork');showwork()">我的图片</el-button>
           </el-col>
           <el-col
             :xs="1"
@@ -39,7 +39,7 @@
             :xl="1"
             :class="['sq-btn','sq-like',flag2?'sq-btn-act':'']"
           >
-            <el-button type="text" @click="show('mylike');showlike()">喜欢</el-button>
+            <el-button type="text" @click="show('mylike');showlike()">我的发布</el-button>
           </el-col>
           <el-col
             :xs="1"
@@ -55,27 +55,49 @@
             <el-button type="text" @click="show('myalbum');showalbum()">相册</el-button>
           </el-col>
           <div v-if="flag4" :class="[flag5?'sq-head-btn3':'sq-head-btn']">
+            <el-button size="mini" class="mysq-btn-al" @click="createtype">新建类型</el-button>
             <el-button size="mini" class="mysq-btn-al" @click="createalbum">新建相册</el-button>
           </div>
         </el-row>
-
         <el-dialog title="新建相册" :visible.sync="newalbum">
           <el-form>
             <el-form-item label="相册名称" :label-width="formLabelWidth1">
-              <el-input v-model="alname" autocomplete="off"></el-input>
+              <el-input v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="相册描述" :label-width="formLabelWidth1">
-              <el-input v-model="alinfo" autocomplete="off"></el-input>
+            <el-form-item label="相册封面" :label-width="formLabelWidth1">
+              <el-upload action="http://localhost:9090/file/upload" ref="img" :on-success="handleImgSuccess">
+                <el-button size="small" type="primary" >点击上传</el-button>
+              </el-upload>
             </el-form-item>
             <el-form-item label="是否公开" :label-width="formLabelWidth2">
-              <el-select v-model="status" placeholder="请选择是否公开">
+              <el-select v-model="form.righte" placeholder="请选择是否公开">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="相册创建时间" :label-width="formLabelWidth1">
+              <el-date-picker v-model="form.creatTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"></el-date-picker>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="newalbum = false">取 消</el-button>
-            <el-button type="primary" @click="createsubmit">确 定</el-button>
+            <el-button type="primary" @click="save">确 定</el-button>
+          </div>
+        </el-dialog>
+        <el-dialog title="新建类型" :visible.sync="newtype" width="40%" :close-on-click-modal="false">
+          <el-form label-width="120px" size="small" style="width: 80%; margin: 0 auto">
+            <el-form-item label="分类名称">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+<!--            <el-form-item label="分类级别">-->
+<!--              <el-input v-model="form.level" autocomplete="off"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="父节点">-->
+<!--              <el-input v-model="form.parentId" autocomplete="off"></el-input>-->
+<!--            </el-form-item>-->
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="newtype = false">取 消</el-button>
+            <el-button type="primary" @click="savetype">确 定</el-button>
           </div>
         </el-dialog>
       </el-header>
@@ -92,6 +114,7 @@ export default {
   components: {},
   data() {
     return {
+      form: {},
       comName: this.$route.path,
       flag1: true,
       flag2: false,
@@ -99,24 +122,25 @@ export default {
       flag4: false,
       flag5: false,
       collection: false,
-      uid:localStorage.getItem('uid'),
+      uid:JSON.parse(localStorage.getItem("user")).id,
       username: "",
       txurl: "/img/tx6.27d6e020.jpg",
-      bgurl:'http://188.131.192.194/head_images/U1wjUvsbuKkrlGwO5K2h339nJ2wf0WdnYBTDxBhf.jpeg',
-      introduction: "做个自我介绍吧..",
+      bgurl:'http://localhost:9090/file/ffff1222d61b4010b1389e995a998ae3.jpg',
+      introduction: "",
       follows: '',
       fans: '',
       newalbum: false,
+      newtype:false,
       alname:'',
       alinfo:'',
       status:0,
       options:[
         {
-          value: 0,
+          value: 1,
           label: "公开"
         },
         {
-          value: 1,
+          value: 0,
           label: "私密"
         }
       ],
@@ -125,7 +149,8 @@ export default {
     };
   },
   created() {
-    this.getinfo()
+    this.getUser()
+    // this.getinfo()
     if (/follows/gi.test(this.comName)) {
       this.flag1 = false;
       this.flag2 = false;
@@ -218,27 +243,62 @@ export default {
     }
   },
   methods: {
-    getinfo(){
-      this.$http.post('/api/basicInfo',{uid:localStorage.getItem('uid')},{emulateJSON:true})
-     .then(result=>{
-       if (result.body[0].username) {
-          this.username=result.body[0].username;
-       }else{
-          this.username='注册用户';
-       }
-       this.introduction=result.body[0].introduce;
-       this.txurl=result.body[0].head_image;
-       this.follows=result.body[0].follow;
-       this.fans=result.body[0].fans;
-     })
+    save() {
+      this.form.userId = this.uid;
+      this.form.parentId = 0;
+      this.form.level =1;
+      this.request.post("/album", this.form).then(res => {
+        if (res.code === '200') {
+          this.$message.success("保存成功")
+          this.dialogFormVisible = false
+          this.load()
+        }else if(res.code === '600') {
+          this.$message.error("无法找到该用户")
+        }
+        else {
+          this.$message.error("保存失败")
+        }
+      })
+    },
+    savetype() {
+      this.form.level = 1;
+      this.form.parent_id = 0;
+      this.request.post("/type", this.form).then(res => {
+        if (res.code === '200') {
+          this.$message.success("保存成功")
+          this.dialogFormVisible = false
+          this.load()
+        } else {
+          this.$message.error("保存失败")
+        }
+      })
+    },
+    getUser() {
+      let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
+      if (username) {
+        // 从后台获取User数据
+        this.request.get("/user/username/" + username).then(res => {
+          // 重新赋值后台的最新User数据
+          console.log(res)
+          this.user = res.data
+          this.username=res.data.nickname;
+          this.txurl=res.data.avatarUrl;
+        })
+      }
+    },
+    handleImgSuccess(res){
+      this.form.albumImg = res
     },
     createalbum(){
       this.newalbum=true;
     },
+    createtype(){
+      this.newtype = true;
+    },
     createsubmit(){
       this.$http.post('/api/createGallery',{uid:this.uid,gallery_name:this.alname,status:this.status,description:this.alinfo},{emulateJSON:true})
       .then(res=>{
-        if (res.body.message=="创建成功") {
+        if (res.data.message=="创建成功") {
           this.$message({
               message: "创建成功",
               type: "success",
@@ -325,6 +385,7 @@ export default {
 </script>
 
 <style>
+
 .sq {
   min-height: 600px;
   height: auto;

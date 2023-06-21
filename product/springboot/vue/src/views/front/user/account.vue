@@ -52,6 +52,7 @@ export default {
       phoneForm:{
           phone:''
       },
+      form:{},
       rules: {
         phone: [{ validator: validatePhone, trigger: "blur" }],
         email: [
@@ -70,15 +71,18 @@ export default {
   },
   methods: {
     getuserinfo(){
-      this.$http.post("/api/basicInfo",{ uid: this.uid },{ emulateJSON: true})
+      let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
+      this.request.get("/user/username/" + username)
       .then(result => {
-        if (result.body[0].email) {
-          this.email=result.body[0].email;
+        this.form = result.data
+        console.log(result)
+        if (result.data.email) {
+          this.email=result.data.email;
         }else{
           this.email='您还未设置邮箱'
         }
-       if(result.body[0].phone){
-         this.phone=result.body[0].phone;
+       if(result.data.phone){
+         this.phone=result.data.phone;
        }else{
          this.phone='您还未设置手机号';
        }
@@ -88,8 +92,10 @@ export default {
     saveemail() {
         this.$refs.emailForm.validate((valid) => {
           if (valid) {
-            this.$http.post("/api/updateEmail",{ uid:this.uid,email: this.emailForm.email},{ emulateJSON: true })
+            this.form.email = this.emailForm.email
+            this.request.post("/user", this.form)
         .then(res => {
+          console.log(res)
           if (res.body.message=="编辑成功") {
           this.$message({
               message: "修改成功",
@@ -115,7 +121,8 @@ export default {
     savephone() {
         this.$refs.phoneForm.validate((valid) => {
         if(valid){
-        this.$http.post("/api/updatePhone",{ uid:this.uid, phone:this.phoneForm.phone},{ emulateJSON: true })
+          this.form.phone = this.phoneForm.phone
+          this.request.post("/user", this.form)
         .then(res => {
           if (res.body.message=="编辑成功") {
           this.$message({

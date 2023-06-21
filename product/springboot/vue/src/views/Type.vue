@@ -33,8 +33,6 @@
       <el-table-column prop="name" label="分类名称"></el-table-column>
       <el-table-column prop="level" label="分类级别"></el-table-column>
       <el-table-column prop="parentId" label="父节点"></el-table-column>
-      <el-table-column prop="orderby" label="排序"></el-table-column>
-
       <el-table-column label="操作"  width="180" align="center">
         <template slot-scope="scope">
           <el-button type="success" round @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
@@ -75,10 +73,6 @@
         <el-form-item label="父节点">
           <el-input v-model="form.parentId" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="form.orderby" autocomplete="off"></el-input>
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>

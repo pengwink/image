@@ -6,6 +6,14 @@
         <result column="name" property="name"></result>
         <result column="COUNT(type_id)" property="value"></result>
     </resultMap>
+    <resultMap id="typeMap" type="com.example.springboot.controller.dto.TypeDTO">
+        <id column="one_id" property="value"/>
+        <result column="one_name" property="label"/>
+        <collection property="children" ofType="com.example.springboot.controller.dto.TypeDTO">
+            <id column="two_id" property="value"/>
+            <result column="two_name" property="label"/>
+        </collection>
+    </resultMap>
 
     <select id="matche" resultType="com.example.springboot.entity.Type">
         SELECT *
@@ -33,5 +41,18 @@
         select type.name,COUNT(type_id) from photo
         left join type on type.id = photo.type_id
         GROUP BY type.id
+    </select>
+    <select id="listTypeDto" resultMap="typeMap"
+            parameterType="java.lang.String">
+        SELECT
+            a.id one_id,
+            a.name one_name,
+            b.id two_id,
+            b.name two_name
+        FROM
+            type a
+                LEFT JOIN type b
+                          ON a.id = b.parent_id
+        WHERE a.parent_id = 0 or a.parent_id = null
     </select>
 </mapper>

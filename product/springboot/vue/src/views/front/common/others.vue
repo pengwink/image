@@ -9,19 +9,19 @@
           <li class="other-li2">
             <ul class="other-ul2">
               <li class="other-name" v-text="username"></li>
-              <li>
-                <ul class="other-ul3">
-                  <li>
-                      <span>关注&nbsp;{{follows}}</span>
-                  </li>
-                  <li>
-                      <span>粉丝&nbsp;{{fans}}</span>
-                  </li>
-                  <li>
-                      <el-button class="other-gz" size="mini" @click="follow(uid)">关注</el-button>
-                  </li>
-                </ul>
-              </li>
+<!--              <li>-->
+<!--                <ul class="other-ul3">-->
+<!--                  <li>-->
+<!--                      <span>关注&nbsp;{{follows}}</span>-->
+<!--                  </li>-->
+<!--                  <li>-->
+<!--                      <span>粉丝&nbsp;{{fans}}</span>-->
+<!--                  </li>-->
+<!--                  <li>-->
+<!--                      <el-button class="other-gz" size="mini" @click="follow(uid)">关注</el-button>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </li>-->
               <li class="other-intr" v-text="introduction"></li>
             </ul>
           </li>
@@ -31,9 +31,9 @@
     <el-container>
       <el-header>
         <el-row type="flex" justify="center" class="other-head">
-          <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1" :class="['other-btn',flag1?'other-btn-act':'']">
-            <el-button type="text" @click="show('mywork');showwork()">他的作品</el-button>
-          </el-col>
+<!--          <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1" :class="['other-btn',flag1?'other-btn-act':'']">-->
+<!--            <el-button type="text" @click="show('mywork');showwork()">他的作品</el-button>-->
+<!--          </el-col>-->
           <el-col
             :xs="1"
             :sm="1"
@@ -42,7 +42,7 @@
             :xl="1"
             :class="['other-btn','other-like',flag2?'other-btn-act':'']"
           >
-            <el-button type="text" @click="show('mylike');showlike()">喜欢</el-button>
+            <el-button type="text" @click="show('mylike');showlike()">他的作品</el-button>
           </el-col>
           <el-col
             :xs="1"
@@ -55,7 +55,7 @@
             <el-button type="text" @click="show('mycollection');showcollection()">收藏</el-button>
           </el-col>
           <el-col :xs="1" :sm="1" :md="1" :lg="1" :xl="1" :class="['other-btn',flag3?'other-btn-act':'']">
-            <el-button type="text" @click="show('myalbum');showalbum()">相册</el-button>
+            <el-button type="text" @click="show('otheralbum');showalbum()">相册</el-button>
           </el-col>
         </el-row>
       </el-header>
@@ -73,16 +73,16 @@ export default {
   data() {
     return {
       comName: this.$route.path,
-      flag1: true,
-      flag2: false,
+      flag1: false,
+      flag2: true,
       flag3: false,
       flag5: false,
       collection: false,
       uid:this.$route.query.uid,
       username: "",
       txurl: "/img/tx6.27d6e020.jpg",
-      bgurl:'http://188.131.192.194/head_images/U1wjUvsbuKkrlGwO5K2h339nJ2wf0WdnYBTDxBhf.jpeg',
-      introduction: "做个自我介绍吧..",
+      bgurl:'http://localhost:9090/file/ffff1222d61b4010b1389e995a998ae3.jpg',
+      introduction: "",
       fans: '',
       follows: '',
       newalbum: false,
@@ -90,13 +90,10 @@ export default {
     };
   },
   created() {
-    this.getinfo()
-    if (/work/gi.test(this.comName)) {
-      this.flag1 = true;
-      this.flag2 = false;
-      this.flag3 = false;
-      this.collection = false;
-    } else if (/like/gi.test(this.comName)) {
+    console.log(this.comName)
+    console.log(this.uid)
+    // this.getinfo()
+    if (/like/gi.test(this.comName)) {
       this.flag1 = false;
       this.flag2 = true;
       this.flag3 = false;
@@ -120,12 +117,7 @@ export default {
   },
   watch: {
     $route: function(to) {
-      if (/work/gi.test(to.path)) {
-      this.flag1 = true;
-      this.flag2 = false;
-      this.flag3 = false;
-      this.collection = false;
-    } else if (/like/gi.test(to.path)) {
+    if (/like/gi.test(to.path)) {
       this.flag1 = false;
       this.flag2 = true;
       this.flag3 = false;
@@ -149,24 +141,6 @@ export default {
     }
   },
   methods: {
-    follow(uuid){
-        this.$http.post('/api/addFocus',{uid:this.uid,uuid:uuid},{emulateJSON:true})
-        .then(res=>{
-            if (res.body.message=="关注成功") {
-          this.$message({
-              message: "关注成功",
-              type: "success",
-              customClass: "zIndex"
-            });
-        }else{
-          this.$message({
-              message: "您已关注",
-              type: "warning",
-              customClass: "zIndex"
-            });
-        }
-        })
-      },
     getinfo(){
       this.$http.post('/api/basicInfo',{uid:this.uid},{emulateJSON:true})
      .then(result=>{
@@ -184,9 +158,9 @@ export default {
     showalbum(){
       this.$router.push({path: "/community/others/album",query:{uid:this.uid}})
     },
-    showwork(){
-      this.$router.push({path: "/community/others/work",query:{my:false,uid:this.uid}})
-    },
+    // showwork(){
+    //   this.$router.push({path: "/community/others/work",query:{my:false,uid:this.uid}})
+    // },
     showlike(){
       this.$router.push({path: "/community/others/like",query:{my:false,uid:this.uid}})
     },
@@ -195,13 +169,7 @@ export default {
     },
     show(data) {
       this.comName = data;
-      if (/work/gi.test(this.comName)) {
-        this.flag1 = true;
-        this.flag2 = false;
-        this.flag3 = false;
-        this.flag4 = false;
-        this.collection = false;
-      } else if (/like/gi.test(this.comName)) {
+      if (/like/gi.test(this.comName)) {
         this.flag1 = false;
         this.flag2 = true;
         this.flag3 = false;
@@ -285,7 +253,7 @@ export default {
   padding: 0;
 }
 .other-name {
-  
+
   font-size: 1.5rem;
   font-weight: bolder;
   margin-bottom: 15px;

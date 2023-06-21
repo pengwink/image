@@ -12,19 +12,25 @@
     <div class="search-result">
       <div
         class="search-result-div"
-        v-for="(img) in imgs"
-        :key="img.pid"
-        :style="{width:img.weight*200/img.height+'px',flexGrow:img.weight*200/img.height}"
+        v-for="(img) in this.imgs"
+        :key="img.id"
+        :style="{width:100,height:100}"
       >
-        <i :style="{paddingBottom:img.height/img.weight*100+'%'}"></i>
-        <img :src="img.position" @click="showdia(img)">
+<!--        :style="{width:img.weight*200/img.height+'px',flexGrow:img.weight*200/img.height}"-->
+<!--        <i :style="{paddingBottom:img.height/img.weight*100+'%'}"></i>-->
+        <el-image :src="img.img" class="el-image1" lazy>
+          <div slot="placeholder" class="image-slot" style="margin-top:3em">
+            <svg-icon icon-file-name="loading" style="vertical-align:-5px">
+            </svg-icon>加载中
+          </div>
+        </el-image>
       </div>
     </div>
     <el-dialog :visible.sync="dialogVisible" width="70%">
         <div class="dia-cont">
-          <img :src="diaitem.position">
+          <img :src="diaitem.img">
         </div>
-        <el-button type="text" @click="docollect(diaitem.pid)">收藏</el-button>
+        <el-button type="text" @click="docollect(diaitem.id)">收藏</el-button>
       </el-dialog>
   </div>
 </template>
@@ -45,15 +51,16 @@ export default {
   },
   methods: {
     getdata(keywords){
-      this.$http.post('/api/keywordSearch',{keyword:keywords},{emulateJSON:true})
+      this.request.post('/photo/selectPhotoName',keywords)
       .then(res=>{
-        this.imgs=Object.assign(res.body);
+        this.imgs=Object.assign(res.data);
         let query = this.$router.history.current.query;
-        let path = this.$router.history.current.path;
+        // let path = this.$router.history.current.path;
         //对象的拷贝
         let newQuery = JSON.parse(JSON.stringify(query));
         newQuery.keywords = keywords;
-        this.$router.push({ path, query: newQuery });
+        // this.$router.push({ path, query: newQuery });
+        console.log(this.imgs)
       })
     },
     showdia(item) {
@@ -115,9 +122,14 @@ export default {
 
 .search-result-div {
   margin: 2px;
-  background-color: violet;
-  position: relative;
+  margin-left: 10px;
+  width: 200px;
+  height: 200px;
+  /*background-color: #ededef;*/
+  /*position: relative;*/
+  /*display: flex;*/
   overflow: hidden;
+  float: left;
 }
 
 .search-result-div i {
@@ -125,12 +137,13 @@ export default {
 }
 
 .search-result-div img {
-  position: absolute;
   top: 0;
   width: 100%;
-  vertical-align: bottom;
+  height: 100%;
+  vertical-align: middle;
   cursor: pointer;
   transition: all 0.6s;
+  float: left;
 }
 .search-result-div img:hover {
   transform: scale(1.2);

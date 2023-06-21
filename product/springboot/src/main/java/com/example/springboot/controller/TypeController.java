@@ -9,9 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.net.URLEncoder;
+
+import com.baidu.aip.contentcensor.AipContentCensor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.entity.Operation;
 import com.example.springboot.service.RecordService;
+import com.example.springboot.service.impl.TypeServiceImpl;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -45,12 +49,24 @@ public class TypeController {
     private final String now = DateUtil.now();
     @Resource
     private RecordService recordService;
+    private static final String APP_ID = "34345125";
+    private static final String API_KEY  = "8p5rM5tcfkoEj0M9vilC5w5Z";
+    private static final String SECRET_KEY = "MXfG45i2NiGUNcuRG550CQLsSFiDGcrU";
     // 新增或者更新
     @PostMapping
     public Result save(HttpServletRequest req, @RequestBody Type type) {
-        if (type.getId() == null) {
+        if (type.getParentId() == null) {
+            type.setParentId(0);
             //type.setTime(DateUtil.now());
             //type.setUser(TokenUtils.getCurrentUser().getUsername());
+        }
+        AipContentCensor client = new AipContentCensor(APP_ID, API_KEY, SECRET_KEY);
+        System.out.println(type);
+        String text = type.getName();
+        JSONObject response = client.textCensorUserDefined(text);
+        System.out.println(response);
+        if(response.getInt("conclusionType")!=1){
+            return Result.error("600","类型有违规词汇");
         }
         recordService.addRecord(req, Operation.addType.getName(), 1,getUser().getId());
         typeService.saveOrUpdate(type);
@@ -74,6 +90,10 @@ public class TypeController {
     @GetMapping
     public Result findAll() {
         return Result.success(typeService.list());
+    }
+    @GetMapping("selectTypeDto")
+    public Result findTypeDto() {
+        return Result.success(typeService.listTypeDto());
     }
 
     /**
@@ -100,12 +120,9 @@ public class TypeController {
      * @return
      */
     @PostMapping("/typeAllPhoto")
-    public Result typeAllPhoto() {
-
-        return Result.success( typeService.typeAllPhoto());
+    public Result typeAllPhotos() {
+        return Result.success(typeService.typeAllPhoto());
     }
-
-
     @GetMapping("/{id}")
     public Result findOne(@PathVariable Integer id) {
         return Result.success(typeService.getById(id));

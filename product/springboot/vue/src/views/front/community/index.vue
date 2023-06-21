@@ -6,9 +6,9 @@
           <el-col :span="2" :offset="0" :class="['communitybtn',flag1?'com-btn-act':'']">
             <el-button type="text" @click="show('recommend')">推荐</el-button>
           </el-col>
-          <el-col :span="2" :offset="5" :class="['communitybtn',flag2?'com-btn-act':'']">
-            <el-button type="text" @click="show('myfollow')">关注</el-button>
-          </el-col>
+<!--          <el-col :span="2" :offset="5" :class="['communitybtn',flag2?'com-btn-act':'']">-->
+<!--            <el-button type="text" @click="show('myfollow')">关注</el-button>-->
+<!--          </el-col>-->
           <el-col :span="2" :offset="5" :class="['communitybtn',flag3?'com-btn-act':'']">
               <el-button type="text" @click="show('mycommunity')">我的社区</el-button>
           </el-col>
@@ -32,7 +32,7 @@ export default {
       flag1:true,
       flag2:false,
       flag3:false,
-      uid:localStorage.getItem('uid')
+      uid:JSON.parse(localStorage.getItem("user")).id
     };
   },
   methods: {

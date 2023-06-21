@@ -3,10 +3,10 @@
     <div class="aldetail">
       <el-row type="flex" justify="center">
         <el-col :span="23">
-          <div class="aldetail-head" v-if="my">
-            <input type="file" @change="changeimg($event)" ref="imgInput" style="display:none;">
-            <el-button size="mini" class="aldetail-head-btn" @click="uploadimg">上传图片</el-button>
-          </div>
+<!--          <div class="aldetail-head" v-if="my">-->
+<!--            <input type="file" @change="changeimg($event)" ref="imgInput" style="display:none;">-->
+<!--            <el-button v-if="myPhoto" size="mini" class="aldetail-head-btn" @click="uploadimg">上传图片</el-button>-->
+<!--          </div>-->
           <waterfall
             class="aldetail-div"
             :col="col"
@@ -17,9 +17,9 @@
             @scroll="scroll"
           >
             <template>
-              <div class="aldetail-item" v-for="img in imgs" :key="img.id">
+              <div class="aldetail-item" v-for="img in imgs" :key="img.imageId">
                 <div class="aldetail-img">
-                  <img :src="img.position">
+                  <img :src="img.img">
                 </div>
                 <div class="aldetail-shadow">
                   <div class="aldetail-det">
@@ -27,7 +27,7 @@
                   </div>
                   <div v-if="my" class="aldetail-line">
                     <div class="aldetail-btn">
-                      <el-button type="text" @click="deletedetail(img.pid)">删除</el-button>
+                      <el-button type="text" @click="removeImage(img.imageId,img.albumId)">删除</el-button>
                     </div>
                   </div>
                 </div>
@@ -39,7 +39,7 @@
     </div>
     <el-dialog :visible.sync="dialogVisible" width="70%">
       <div class="colec-dia-cont">
-        <img :src="diaitem.position">
+        <img :src="diaitem.img">
       </div>
     </el-dialog>
   </div>
@@ -50,6 +50,8 @@ export default {
   name: "albumdetail",
   data() {
     return {
+      token:JSON.parse(localStorage.getItem("user")).token,
+      myPhoto:this.$route.query.uid==JSON.parse(localStorage.getItem("user")).id?true:false,
       dialogVisible: false,
       diaitem: [],
       activeName: "comments",
@@ -119,31 +121,43 @@ export default {
     scroll() {},
     loadmore() {},
     getalbumdetail() {
-      this.$http
-        .post("/api/galleryDetail", { gid: this.gid }, { emulateJSON: true })
+      this.request
+        .post("/photo/albumPhoto",this.gid )
         .then(res => {
-          this.imgs = Object.assign(res.body.list);
+          this.imgs = Object.assign(res.data);
+          console.log(this.imgs)
         });
     },
-    deletedetail(pid) {
-      this.$http
-        .post("/api/delete", { uid: this.uid, pid: pid }, { emulateJSON: true })
-        .then(res => {
-          if (res.body.message == "删除成功") {
+    removeImage(imageId,albumId) {
+      this.$confirm('此操作将移出相册集, 是否继续?', '移出相册', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const formData = new FormData();
+        formData.append('albumId', albumId);
+        formData.append('imageId', imageId);
+        this.axios({
+          url: this.$serveUrL + "/album/removeImageFromAlbum",
+          headers: {
+            'token': this.token //设置token 其中K名要和后端协调好
+          },
+          method: "post",
+          data: formData
+        }).then(function (resp) {
+          console.log(resp)
+          if (resp.data.code == "200") {
             this.$message({
-              message: "删除成功",
-              type: "success",
-              customClass: "zIndex"
+              message: '图片移除成功！',
+              type: 'success'
             });
             this.getalbumdetail();
-          } else {
-            this.$message({
-              message: "删除失败",
-              type: "warning",
-              customClass: "zIndex"
-            });
           }
-        });
+          else {
+            1;
+          }
+        })
+      })
     },
     show(item) {
       this.dialogVisible = true;

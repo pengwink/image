@@ -4,22 +4,30 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelWriter;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.net.URLEncoder;
+
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.springboot.entity.*;
+import com.example.springboot.service.RecordService;
+import com.example.springboot.utils.FileServeUtil;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springboot.common.Result;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.springboot.entity.User;
 import com.example.springboot.utils.TokenUtils;
 
 import com.example.springboot.service.IPostsService;
-import com.example.springboot.entity.Posts;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,12 +42,56 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
-
+    @Resource
+    private FileServeUtil fileServeUtil;
+    @Resource
+    private RecordService recordService;
+    private final String now = DateUtil.now();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Resource
     private IPostsService postsService;
-
-    private final String now = DateUtil.now();
-
+    @RequestMapping("/upload")
+    public JSONObject upload(HttpServletRequest req, String name, String descr, String typeName,String weight,String height, @RequestParam("file")MultipartFile[] multipartFiles,@RequestParam("imageId") List<Integer> imageId) throws Exception {
+        System.out.println(imageId);
+        Integer hideRadio = 1;
+        Integer isPass = 0;
+        System.out.println(name + "," + descr +","+typeName+","+weight);
+        JSONObject jsonObject = new JSONObject();
+        User user = getUser();
+        Integer userId;
+        if(user!=null) {
+            userId = user.getId();
+        }
+        else{
+            jsonObject.put("status","fail");
+            return jsonObject;
+        }
+        Date date = new Date(); // this object contains the current date value
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String imgDate =formatter.format(date);
+        List<Posts> imgList = new ArrayList<>();
+        //将所有上传的图片对象存入集合
+        for (MultipartFile m:multipartFiles){
+            String fileName = m.getOriginalFilename();
+            String imageUrL = fileServeUtil.uploadServe(req,m);
+            imgList.add(new Posts(null,name,descr,imageUrL,imgDate,userId,hideRadio,isPass));
+        }
+        postsService.addPosts(req,imgList,typeName,imageId);
+        if(true){
+            jsonObject.put("status","success");
+            //记录操作
+            recordService.addRecord(req, Operation.addFabu.getName(),imgList.size(),userId);
+        }
+        else{
+            for(Posts i:imgList){
+                String imageUrL = i.getImg();
+                fileServeUtil.deleteServe(imageUrL);
+            }
+            jsonObject.put("status","fail");
+        }
+        return jsonObject;
+    }
+    //    // 新增或者更新
     // 新增或者更新
     @PostMapping
     public Result save(@RequestBody Posts posts) {
@@ -63,6 +115,35 @@ public class PostsController {
         return Result.success();
     }
 
+    @GetMapping("/selectAll")
+    public Result selectAll() {
+        List<Posts> list = postsService.selectAl();
+        System.out.println(list);
+        return Result.success(list);
+    }
+    @GetMapping("/selectAlll")
+    public Result selectAlll(@RequestParam Integer id,@RequestParam Integer uid) {
+        List<Photo> list = postsService.selectAlll(id,uid);
+        System.out.println(list);
+        return Result.success(list);
+    }
+    /**
+     *分页查询所有
+     * @return
+     */
+    @RequestMapping("/selectAl")
+    public JSONObject selectAllImage(Integer currentPage,Integer pageSize,Integer userId){
+        JSONObject jsonObject = new JSONObject();
+        if(userId !=null) {
+            PostsEnca post = postsService.selectPostPage(userId,currentPage,pageSize);
+            jsonObject.put("data",post);
+            jsonObject.put("status","success");
+        }
+        else{
+            jsonObject.put("status","fail");
+        }
+        return jsonObject;
+    }
     @GetMapping
     public Result findAll() {
         return Result.success(postsService.list());

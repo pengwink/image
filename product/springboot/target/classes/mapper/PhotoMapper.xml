@@ -17,6 +17,24 @@
 <!--            <result column="photo_id" property="isAgree" />-->
 <!--        </collection>-->
     </resultMap>
+    <insert id="addImages" parameterType="list" useGeneratedKeys="true" keyProperty="id">
+        insert into photo(album_id,user_id,type_id,`name`,img,content,photo_time,photo_right,photo_statue,is_standard) values
+        <foreach collection="list" item="Photo" index="index" separator=",">
+           (
+            #{Photo.albumId},
+            #{Photo.userId},
+            #{Photo.typeId},
+            #{Photo.name},
+            #{Photo.img},
+            #{Photo.content},
+            #{Photo.photoTime},
+            #{Photo.photoRight},
+            #{Photo.photoStatue},
+            #{Photo.isStandard}
+            )
+        </foreach>
+    </insert>
+
     <select id="findPage" resultMap="pagePhoto">
         select photo.*,`user`.nickname as userNickname,`album`.`name` as albumName,type.`name` as typeName,COUNT(DISTINCT agree.id) as isAgree,COUNT(DISTINCT collect.id) as isCollect from photo
         left join `user` on photo.user_id = user.id
@@ -31,4 +49,7 @@
         </where>
         GROUP BY photo.id
     </select>
+<!--    <select id="selectAllImageByTime" resultType="com.example.springboot.entity.Photo">-->
+
+<!--    </select>-->
 </mapper>

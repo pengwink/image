@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div id="title">
-            <h1>普通上传</h1>
+            <h1>上传图片</h1>
         </div>
         <div class="main-content">
 
@@ -44,7 +44,7 @@
                             <el-option label="动物" value="动物"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="拍摄地点">
+                    <el-form-item label="拍摄内容">
                         <el-input v-model="formdata.imgSite" class="formItem"></el-input>
                     </el-form-item>
                     <el-form-item label="拍摄日期">
@@ -89,9 +89,8 @@
 export default {
     data() {
         return {
-
-            token: '1111',
-            albums: [
+          token:JSON.parse(localStorage.getItem("user")).token, //token凭证
+          albums: [
             ],
             inputAlbum: '',
             formdata: {
@@ -117,17 +116,6 @@ export default {
 
     },
     mounted() {
-        var cookie = this.$cookie.getCookie();
-        if (cookie[0] != "token") {
-            this.$message({
-                message: '登录已过期!',
-                type: 'error'
-            });
-            this.$router.push({ name: 'login' });
-        }
-        else {
-            this.token = cookie[1];
-        }
         this.selectAlbums();
     },
 
@@ -149,7 +137,6 @@ export default {
         selectAlbums() {
             var _this = this;
             const formData = new FormData();
-            formData.append('token', this.token);
             this.axios({
                 url: this.$serveUrL + "/album/selectAlbumName",
                 method: "post",
@@ -180,16 +167,19 @@ export default {
             // 添加自定义参数，不传可删除 
             formData.append('albumId', this.formdata.album.albumId);   //相册id
             formData.append('albumName', this.formdata.album.albumName); //相册名字 
-            formData.append('imgSite', this.formdata.imgSite); //拍摄地点
+            formData.append('content', this.formdata.imgSite); //拍摄地点
             formData.append('imgType', this.formdata.imgtype);//图片类型
             formData.append('imgDate', this.formdata.imgdate); //拍摄时间
-            formData.append('token', this.token);
             this.elProgress = true;
             this.axios({
-                url: this.$serveUrL + "/image/upload",
+                url: this.$serveUrL + "/photo/upload",
+              headers: {
+                'token': this.token, //设置token 其中K名要和后端协调好
+                'Content-Type': 'multipart/form-data'
+              },
                 method: "post",
                 data: formData,
-                headers: { 'Content-Type': 'multipart/form-data' },
+
                 onUploadProgress: function (progressEvent) {
                     if (progressEvent.lengthComputable) {
                         let progressPercent = parseInt((progressEvent.loaded / progressEvent.total) * 100)
@@ -203,15 +193,20 @@ export default {
             }).then(function (resp) {
                  _this.elProgress = false;
                 if (resp.data.status == "success") {
-                    _this.$message({
+                    this.$message({
+
                         type: 'success',
-                        message: '上传图片成功!'
+                        message: '上传图片成功!',
+                        customClass: "zIndex"
                     });
+                  this.fileList=[];
                 }
+
                 else {
-                    _this.$message({
+                    this.$message({
                         type: 'fail',
-                        message: '上传图片失败!'
+                        message: '上传图片失败!',
+                        customClass: "zIndex"
                     });
                 }
 
@@ -241,7 +236,7 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .main {
     height: 100%;
     width: 100%;
@@ -274,7 +269,6 @@ export default {
 }
 
 .images {
-
     position: absolute;
     left: 28%;
     top: 0;
@@ -295,7 +289,6 @@ export default {
 }
 
 .u-button {
-
     width: 100%;
     height: 100%;
 }

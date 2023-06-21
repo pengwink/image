@@ -5,7 +5,7 @@
         <myheader></myheader>
         </el-header>
       <el-main>
-        <router-view></router-view>
+        <router-view @refreshUser="getUser" ></router-view>
         </el-main>
       <el-footer>
         <myfooter></myfooter>
@@ -30,11 +30,23 @@ export default {
     
   },
   methods: {
-
+    getUser() {
+      let username = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).username : ""
+      if (username) {
+        // 从后台获取User数据
+        this.request.get("/user/username/" + username).then(res => {
+          // 重新赋值后台的最新User数据
+          this.user = res.data
+        })
+      }
+    }
   }
 };
 </script>
 
+<style scoped>
+
+</style>
 <style>
 body {
   margin: 0;
@@ -46,9 +58,23 @@ body {
 }
 .appheader{
   margin-bottom: 49px;
-  z-index: 2999;
+  z-index: 2000;
 }
 .zIndex{
   z-index: 9999 !important;
+}
+.el-dialog {
+  display: flex;
+  flex-direction: column;
+  margin: 0 !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.el-dialog .el-dialog__body {
+  flex: 1;
+  overflow: auto;
 }
 </style>

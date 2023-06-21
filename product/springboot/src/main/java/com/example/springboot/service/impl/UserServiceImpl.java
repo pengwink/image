@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.RoleEnum;
+import com.example.springboot.controller.UserController;
 import com.example.springboot.controller.dto.UserDTO;
 import com.example.springboot.controller.dto.UserPasswordDTO;
 import com.example.springboot.exception.ServiceException;
@@ -18,6 +19,8 @@ import com.example.springboot.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+
+import static com.example.springboot.controller.UserController.convertMD5;
 
 /**
  * <p>

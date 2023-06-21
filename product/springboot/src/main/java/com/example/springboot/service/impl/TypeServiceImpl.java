@@ -1,5 +1,6 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.controller.dto.TypeDTO;
 import com.example.springboot.entity.Photo;
 import com.example.springboot.entity.Type;
 import com.example.springboot.mapper.TypeMapper;
@@ -47,5 +48,11 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements IT
     @Override
     public List<Type> typeAllPhoto() {
         return typeMapper.typeAllPhoto();
+    }
+
+    @Override
+    public List<TypeDTO> listTypeDto() {
+        List<TypeDTO> list = typeMapper.listTypeDto();
+        return list;
     }
 }

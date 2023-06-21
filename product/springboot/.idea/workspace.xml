@@ -4,110 +4,104 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c11023d-0003-48bc-adb9-05011b7c1249" name="Changes" comment="第二次提交&#10;完成了，图片管理与类别相册和角色的管理">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/RecordController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Operation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Record.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/RecordMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/utils/IpUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/RecordMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/arrow-down.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/comments.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/dian.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/fabu.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/logo1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/message-open.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/message.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/nopic.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/shequ-bg.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/shequ.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/sq-bg.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tuku.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tuku1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tx1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tx2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tx3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tx4.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tx5.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/tx6.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/user.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/xin-red.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/assets/xin.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/components/SvgIcon/index.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/router/front.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/App.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/fabu.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/footer.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/header.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/index.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/others.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/upload.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/album.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/albumdetail.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/collection.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/fans.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/follows.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/guanzhu.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/index.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/like.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/myshequ.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/mywork.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/community/tuijian.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/gallery/gallery.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/gallery/search.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/user/account.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/user/profile.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/user/setting.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/front/user/user.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/src/views/upload.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue/vue.config.js" afterDir="false" />
+    <list default="true" id="0c11023d-0003-48bc-adb9-05011b7c1249" name="Changes" comment="第三次提交&#10;完成了，类型可视化，审核管理，多选图片，预览相册">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/dto/TypeDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/PostsEnca.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/utils/FileServeUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue/src/views/Comment.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/rank.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue/src/views/front/common/uploadImage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/SpringbootApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/SpringbootApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/config/InterceptorConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/config/InterceptorConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/AgreeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/AgreeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/AlbumController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/AlbumController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/CollectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/CollectController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/FileController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/PhotoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/PhotoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/PostsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/PostsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/TypeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/TypeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/dto/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/dto/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Album.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Album.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/dto/UserPasswordDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/controller/dto/UserPasswordDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Agree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Agree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/AllTimeType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/AllTimeType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Collect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Collect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Operation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Operation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Photo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Photo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Posts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Posts.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/Type.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/entity/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/AlbumMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/AlbumMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/PhotoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/PhotoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/PostsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/PostsMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/TypeMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/mapper/TypeMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IAlbumService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IAlbumService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IAgreeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IAgreeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/ICollectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/ICollectService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IPhotoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IPhotoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IPostsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/IPostsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/ITypeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/ITypeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/AgreeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/AgreeServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/AlbumServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/AlbumServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/CollectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/CollectServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/PhotoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/PhotoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/PostsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/PostsServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/TypeServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/TypeServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/service/impl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/utils/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/utils/CodeGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/springboot/utils/TokenUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/springboot/utils/TokenUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AlbumMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AlbumMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/PhotoMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/PhotoMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/PostsMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/PostsMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/TypeMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/TypeMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/UserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/UserMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/AlbumMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/AlbumMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/mapper/PhotoMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/PhotoMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/mapper/TypeMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/TypeMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/babel.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/src/assets/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/assets/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/UserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/UserMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/components/Aside.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/components/Aside.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/components/InsideAlbum.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/components/InsideAlbum.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/router/front.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/router/front.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/router/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/views/Album.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Album.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/src/views/File.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/File.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Album1.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Album1.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Dashbord.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Donate.vue" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Home.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Login.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/src/views/Password.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Password.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Person.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Person.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/views/Photo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Photo.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/src/views/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Register.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Posts.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Posts.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Record.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Record.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/Type.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/Type.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vue/src/views/User.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/User.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/VisualdataType.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/VisualdataType.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/Front.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/Home.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/Password.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/Person.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/common/fabu.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/common/fabu.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/common/header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/common/header.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/common/others.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/common/others.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/album.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/album.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/albumdetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/albumdetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/collection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/collection.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/fans.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/follows.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/guanzhu.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/like.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/like.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/myshequ.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/myshequ.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/mywork.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/mywork.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/community/tuijian.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/community/tuijian.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/gallery/search.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/gallery/search.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/user/account.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/user/account.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/user/profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/user/profile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/user/setting.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/front/user/user.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/front/user/user.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue/src/views/upload.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue/src/views/upload.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +118,19 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="6d5a8c32-9ee0-4e5b-9755-2503124bd7e5" />
+        <option name="url" value="https://github.com/pengwink/image.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -148,46 +155,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/resource/projects/BS/CXK/product/springboot/vue/src/views",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "spring.configuration.checksum": "d164d99c46d45be6b1e7585ff7ea10e7",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/resource/projects/BS/CXK/product/springboot/vue/src/views&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;d164d99c46d45be6b1e7585ff7ea10e7&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\resource\projects\BS\CXK\product\springboot\vue\src\views" />
+      <recent name="D:\resource\projects\BS\CXK\product\springboot\vue\src\views\front\common" />
       <recent name="D:\resource\projects\BS\CXK\product\springboot\src\main\resources\mapper" />
       <recent name="D:\resource\projects\BS\CXK\product\springboot\src\main\java\com\example\springboot\service" />
       <recent name="D:\resource\projects\BS\CXK\product\springboot\vue" />
-      <recent name="D:\resource\projects\BS\CXK\product\springboot\vue\src\components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\resource\projects\BS\CXK\product\springboot\src\main\resources\templates" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.springboot.entity" />
+      <recent name="com.example.springboot.controller.dto" />
+      <recent name="com.example.springboot.utils" />
       <recent name="com.example.springboot.controller" />
       <recent name="com.example.springboot.mapper" />
-      <recent name="com.example.springboot.utils" />
-      <recent name="com.example.springboot.common" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.SpringbootApplication">
@@ -274,7 +282,59 @@
       <workItem from="1681433744790" duration="18526000" />
       <workItem from="1681516566958" duration="10535000" />
       <workItem from="1681566166241" duration="34629000" />
-      <workItem from="1681779911480" duration="30506000" />
+      <workItem from="1681779911480" duration="42176000" />
+      <workItem from="1681909245264" duration="6824000" />
+      <workItem from="1681921300337" duration="59000" />
+      <workItem from="1681954139395" duration="32776000" />
+      <workItem from="1682040271720" duration="12734000" />
+      <workItem from="1682131109535" duration="3799000" />
+      <workItem from="1682171879876" duration="38220000" />
+      <workItem from="1682297161794" duration="11159000" />
+      <workItem from="1682324431605" duration="25685000" />
+      <workItem from="1682383345932" duration="32906000" />
+      <workItem from="1682470690470" duration="37613000" />
+      <workItem from="1682558968418" duration="36357000" />
+      <workItem from="1682645290452" duration="8218000" />
+      <workItem from="1682670342505" duration="39992000" />
+      <workItem from="1682904664949" duration="19038000" />
+      <workItem from="1682926131507" duration="42849000" />
+      <workItem from="1683027508859" duration="37722000" />
+      <workItem from="1683164237209" duration="24773000" />
+      <workItem from="1683197305604" duration="15229000" />
+      <workItem from="1683247179237" duration="16597000" />
+      <workItem from="1683367523634" duration="36208000" />
+      <workItem from="1683591328661" duration="8943000" />
+      <workItem from="1683615371691" duration="172000" />
+      <workItem from="1683615669588" duration="106000" />
+      <workItem from="1683615800424" duration="25770000" />
+      <workItem from="1683682167882" duration="3306000" />
+      <workItem from="1683775916850" duration="7816000" />
+      <workItem from="1683795221516" duration="1595000" />
+      <workItem from="1683800765588" duration="11036000" />
+      <workItem from="1683862729919" duration="10323000" />
+      <workItem from="1683895959487" duration="7840000" />
+      <workItem from="1683942153436" duration="38069000" />
+      <workItem from="1684311983289" duration="1061000" />
+      <workItem from="1684319513076" duration="51815000" />
+      <workItem from="1684640447520" duration="12097000" />
+      <workItem from="1684759358719" duration="4801000" />
+      <workItem from="1684853733217" duration="1170000" />
+      <workItem from="1684865920460" duration="16209000" />
+      <workItem from="1685007399380" duration="11868000" />
+      <workItem from="1685153102468" duration="326000" />
+      <workItem from="1685253067462" duration="11457000" />
+      <workItem from="1685415979043" duration="6374000" />
+      <workItem from="1685502851551" duration="3490000" />
+      <workItem from="1685581658516" duration="8833000" />
+      <workItem from="1685620137724" duration="17429000" />
+      <workItem from="1685716809232" duration="9753000" />
+      <workItem from="1685749099063" duration="21110000" />
+      <workItem from="1685799521417" duration="1634000" />
+      <workItem from="1685805549819" duration="14666000" />
+      <workItem from="1685857025423" duration="6007000" />
+      <workItem from="1686019726526" duration="2907000" />
+      <workItem from="1686049943666" duration="2294000" />
+      <workItem from="1686384294222" duration="679000" />
     </task>
     <task id="LOCAL-00001" summary="第一次提交">
       <created>1680405942495</created>
@@ -290,7 +350,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680592470539</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="第三次提交&#10;完成了，类型可视化，审核管理，多选图片，预览相册">
+      <created>1681887537947</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1681887537947</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,7 +389,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="第一次提交" />
     <MESSAGE value="第二次提交&#10;完成了，图片管理与类别相册和角色的管理" />
-    <option name="LAST_COMMIT_MESSAGE" value="第二次提交&#10;完成了，图片管理与类别相册和角色的管理" />
+    <MESSAGE value="第三次提交&#10;完成了，类型可视化，审核管理，多选图片，预览相册" />
+    <option name="LAST_COMMIT_MESSAGE" value="第三次提交&#10;完成了，类型可视化，审核管理，多选图片，预览相册" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
@@ -330,9 +398,17 @@
         <PinnedItemInfo parentTag="java.lang.String" memberName="hash" />
       </pinned-members>
     </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="SpringBootApplicationConfigurationType">
+        <watch expression="imgList.get(0).name" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/springboot$SpringbootApplication.ic" NAME="SpringbootApplication Coverage Results" MODIFIED="1684652660171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

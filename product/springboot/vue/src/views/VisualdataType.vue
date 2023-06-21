@@ -38,14 +38,14 @@ export default {
 
   //调用
   mounted() {
-    window.onresize = () => {
-      if (this.resizeTimer) {
-        clearTimeout(this.resizeTimer)
-      }
-      this.resizeTimer = setTimeout(() => {
-        this.charts.resize();
-      }, 500)
-    };
+    // window.onresize = () => {
+    //   if (this.resizeTimer) {
+    //     clearTimeout(this.resizeTimer)
+    //   }
+    //   this.resizeTimer = setTimeout(() => {
+    //     this.charts.resize();
+    //   }, 500)
+    // };
 
     if (this.token == null) {
       this.$message({
@@ -102,7 +102,6 @@ export default {
         title: {
           color: 'res',
           text: '图片类型分布饼图',
-          subtext: '来源数据库',
           left: '50%'
         },
         tooltip: {

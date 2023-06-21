@@ -29,9 +29,9 @@ public class CodeGenerator {
     private static final String basePath = "D:\\resource\\projects\\BS\\CXK\\product\\springboot\\";
 
     // 数据库需要生成代码的表名
-    private static final String tableName = "posts";
+    private static final String tableName = "comment";
     // 生成页面的菜单名称
-    private static final String modelName = "发布";
+    private static final String modelName = "多级评论";
 
     // ----------------------------------------以上必修修改-----------------------------------------
 
@@ -43,7 +43,7 @@ public class CodeGenerator {
         // 生成SpringBoot
         generate(tableName);
         // 生成vue
-        createVue(tableName);
+//        createVue(tableName);
         // 生成菜单
 //        createMenu(tableName, modelName);
     }
