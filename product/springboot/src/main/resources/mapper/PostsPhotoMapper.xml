@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.PostsPhotoMapper">
+
+    <select id="selectPhoto" resultType="com.example.springboot.entity.Photo"
+            parameterType="java.lang.Integer">
+        select photo.*
+        from photo
+        left join posts_photo on posts_photo.photo_id = photo.id
+        <where>
+            posts_photo.posts_id = #{pid}
+        </where>
+    </select>
+</mapper>

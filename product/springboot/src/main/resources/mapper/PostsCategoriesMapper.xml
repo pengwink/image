@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.PostsCategoriesMapper">
+
+    <select id="selectCategory" resultType="com.example.springboot.entity.Categories"
+            parameterType="java.lang.Integer">
+        select categories.category
+        from posts_categories
+        left join categories  on posts_categories.categories_id = categories.id
+        <where>
+            posts_categories.posts_id = #{pid}
+        </where>
+    </select>
+</mapper>
